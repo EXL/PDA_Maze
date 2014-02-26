@@ -8,10 +8,6 @@
 #include <QDebug>
 #endif
 
-#include <QWidget>
-#include <QSpinBox>
-#include <QVBoxLayout>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -24,29 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     createMenus();
 
-    QWidget *widget = new QWidget();
-    QSpinBox *spinbox[3];
 
-    for(size_t i = 0; i < 3; ++i) {
-        spinbox[i] = new QSpinBox();
-    }
-
-    spinbox[0]->setValue(m_ini_PDA_Maze->getV_cfg_timer_mode());
-    spinbox[1]->setValue(m_ini_PDA_Maze->getV_cfg_map_mode());
-    spinbox[2]->setValue(m_ini_PDA_Maze->getV_cfg_map_size());
-
-    QVBoxLayout *mainLayout = new QVBoxLayout();
-    mainLayout->addWidget(spinbox[0]);
-    mainLayout->addWidget(spinbox[1]);
-    mainLayout->addWidget(spinbox[2]);
-
-    widget->setLayout(mainLayout);
-
-    setCentralWidget(widget);
-
-    connect(spinbox[0], SIGNAL(valueChanged(int)), m_ini_PDA_Maze, SLOT(setV_cfg_timer_mode(int)));
-    connect(spinbox[1], SIGNAL(valueChanged(int)), m_ini_PDA_Maze, SLOT(setV_cfg_map_mode(int)));
-    connect(spinbox[2], SIGNAL(valueChanged(int)), m_ini_PDA_Maze, SLOT(setV_cfg_map_size(int)));
 }
 
 void MainWindow::createActions()
