@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "IniConfig.h"
+#include "PlayField.h"
 
 #include <QMenu>
 #include <QMainWindow>
@@ -24,6 +25,7 @@ class MainWindow : public QMainWindow
     };
 
     IniConfig *m_ini_PDA_Maze;
+    PlayField *m_playField;
 
     QAction *m_actionNewGame;
     QAction *m_actionQuit;

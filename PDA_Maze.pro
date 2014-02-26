@@ -17,8 +17,13 @@ QMAKE_CXXFLAGS_DEBUG += -D_DEBUG
 
 SOURCES += main.cpp \
     MainWindow.cpp \
-    IniConfig.cpp
+    IniConfig.cpp \
+    data.c \
+    PlayField.cpp
 
 HEADERS  += \
     MainWindow.h \
-    IniConfig.h
+    IniConfig.h \
+    PlayField.h
+
+OTHER_FILES +=

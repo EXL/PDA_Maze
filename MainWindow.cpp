@@ -16,11 +16,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_ini_PDA_Maze = new IniConfig();
     m_ini_PDA_Maze->readIniConfig();
 
+    m_playField = new PlayField(this);
+
     createActions();
 
     createMenus();
 
-
+    setCentralWidget(m_playField);
 }
 
 void MainWindow::createActions()
@@ -28,7 +30,8 @@ void MainWindow::createActions()
     m_actionNewGame = new QAction(this);
     m_actionNewGame->setText(tr("&New Game"));
     m_actionNewGame->setShortcut(Qt::Key_F5);
-    connect(m_actionNewGame, SIGNAL(triggered()), this, SLOT(close()));
+    connect(m_actionNewGame, SIGNAL(triggered()),
+            m_playField, SLOT(start()));
 
     m_actionQuit = new QAction(this);
     m_actionQuit->setText(tr("&Quit"));
