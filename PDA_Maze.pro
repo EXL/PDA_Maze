@@ -11,8 +11,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = PDA_Maze
 TEMPLATE = app
 
+# For Debug
+QMAKE_CFLAGS_DEBUG += -D_DEBUG
+QMAKE_CXXFLAGS_DEBUG += -D_DEBUG
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    MainWindow.cpp \
+    IniConfig.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    MainWindow.h \
+    IniConfig.h
