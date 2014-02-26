@@ -11,32 +11,21 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    isRunning = false;
-
     setWindowTitle("PDA Maze");
 
     m_ini_PDA_Maze = new IniConfig();
     m_ini_PDA_Maze->readIniConfig();
 
     m_playField = new PlayField(this);
-    resetMazeVariables();
+    m_playField->updateTimerMode(m_ini_PDA_Maze->getV_cfg_timer_mode());
+    m_playField->updateMapMode(m_ini_PDA_Maze->getV_cfg_map_mode());
+    m_playField->updateSize(m_ini_PDA_Maze->getV_cfg_map_size());
 
     createActions();
 
     createMenus();
 
     setCentralWidget(m_playField);
-}
-
-void MainWindow::resetMazeVariables()
-{
-    m_playField->setTimer_mode(
-                (PlayField::TimerModes)
-                m_ini_PDA_Maze->getV_cfg_timer_mode());
-    m_playField->setMap_mode(
-                (PlayField::MapModes)
-                m_ini_PDA_Maze->getV_cfg_map_mode());
-    m_playField->setMapSize(m_ini_PDA_Maze->getV_cfg_map_size());
 }
 
 void MainWindow::createActions()
@@ -46,8 +35,6 @@ void MainWindow::createActions()
     m_actionNewGame->setShortcut(Qt::Key_F5);
     connect(m_actionNewGame, SIGNAL(triggered()),
             m_playField, SLOT(start()));
-    connect(m_actionNewGame, SIGNAL(triggered()),
-            this, SLOT(gameIsRunning()));
 
     m_actionQuit = new QAction(this);
     m_actionQuit->setText(tr("&Quit"));
@@ -55,9 +42,8 @@ void MainWindow::createActions()
     connect(m_actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
     m_actionAbout = new QAction(this);
-    m_actionAbout->setText(tr("&About..."));
+    m_actionAbout->setText(tr("&About"));
     connect(m_actionAbout, SIGNAL(triggered()), m_playField, SLOT(stop()));
-    connect(m_actionAbout, SIGNAL(triggered()), this, SLOT(gameIsntRunning()));
 
     m_actionAboutQt = new QAction(this);
     m_actionAboutQt->setText(tr("About &Qt"));
@@ -234,10 +220,7 @@ void MainWindow::slotTimerModeChange(QAction *action)
     qDebug() << "Timer: " << action->data().toInt();
 #endif
     m_ini_PDA_Maze->setV_cfg_timer_mode(action->data().toInt());
-    resetMazeVariables();
-    if (isRunning) {
-        m_playField->start();
-    }
+    m_playField->updateTimerMode(action->data().toInt());
 }
 
 void MainWindow::slotMapModeChange(QAction *action)
@@ -246,10 +229,7 @@ void MainWindow::slotMapModeChange(QAction *action)
     qDebug() << "Mode: " << action->data().toInt();
 #endif
     m_ini_PDA_Maze->setV_cfg_map_mode(action->data().toInt());
-    resetMazeVariables();
-    if(isRunning) {
-        m_playField->start();
-    }
+    m_playField->updateMapMode(action->data().toInt());
 }
 
 void MainWindow::slotMapSizeChange(QAction *action)
@@ -258,10 +238,7 @@ void MainWindow::slotMapSizeChange(QAction *action)
     qDebug() << "Size: " << action->data().toInt();
 #endif
     m_ini_PDA_Maze->setV_cfg_map_size(action->data().toInt());
-    resetMazeVariables();
-    if(isRunning) {
-        m_playField->start();
-    }
+    m_playField->updateSize(action->data().toInt());
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -26,33 +26,24 @@ class PlayField : public QWidget
     Q_OBJECT
 
 public:
-    PlayField(QWidget *parent, const char *name = 0 /*, WFlags f = 0 */);
+    PlayField(QWidget *parent = 0/*, const char *name = 0, WFlags f = 0*/);
     ~PlayField();
 
 public:
     enum TimerModes {
-	TimerUp,
-	TimerDown,
+    TimerUp,
+    TimerDown,
     };
     enum MapModes {
-	MapAll,
-	MapBuild,
-	MapNone,
+    MapAll,
+    MapBuild,
+    MapNone,
     };
     enum Dist {
-	DistFar,
-	DistMid,
-	DistClose,
+    DistFar,
+    DistMid,
+    DistClose,
     };
-
-    //int size() const;
-    void setMapSize(int size);
-
-    //TimerModes timer_mode() const;
-    void setTimer_mode(const TimerModes &timer_mode);
-
-    //MapModes map_mode() const;
-    void setMap_mode(const MapModes &map_mode);
 
 private:
     static const int max_size = 49;
@@ -62,19 +53,19 @@ private:
     enum MapModes m_map_mode;
     int m_size;
     enum {
-	Intro,
-	Playing,
-	ViewMap,
-	GameOverWin,
-	GameOverLoose,
+    Intro,
+    Playing,
+    ViewMap,
+    GameOverWin,
+    GameOverLoose,
     } m_state;
     int m_xpos;
     int m_ypos;
     enum Dirs {
-	North = 0,
-	East = 1,
-	South = 2,
-	West = 3,
+    North = 0,
+    East = 1,
+    South = 2,
+    West = 3,
     } m_dir;
     int m_maze[max_size][max_size];
     int m_seen[max_size][max_size];
@@ -124,7 +115,7 @@ public slots:
     void stop(void);
 
 protected:
-    void paintEvent(QPaintEvent */*event*/);
+    void paintEvent(QPaintEvent *event);
     void showEvent(QShowEvent *event);
     void resizeEvent(QResizeEvent *event);
     void keyPressEvent(QKeyEvent *event);
@@ -158,4 +149,3 @@ private:
 };
 
 #endif // __PLAYFIELD_HEADER__
-
