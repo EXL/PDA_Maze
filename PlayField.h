@@ -16,10 +16,10 @@
 #ifndef __PLAYFIELD_HEADER__
 #define __PLAYFIELD_HEADER__
 
-#include <qpixmap.h>
-#include <qpainter.h>
-#include <qtimer.h>
-#include <qwidget.h>
+#include <QPixmap>
+#include <QPainter>
+#include <QTimer>
+#include <QWidget>
 
 class PlayField : public QWidget
 {
@@ -44,6 +44,15 @@ public:
 	DistMid,
 	DistClose,
     };
+
+    //int size() const;
+    void setMapSize(int size);
+
+    //TimerModes timer_mode() const;
+    void setTimer_mode(const TimerModes &timer_mode);
+
+    //MapModes map_mode() const;
+    void setMap_mode(const MapModes &map_mode);
 
 private:
     static const int max_size = 49;
@@ -115,7 +124,7 @@ public slots:
     void stop(void);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent */*event*/);
     void showEvent(QShowEvent *event);
     void resizeEvent(QResizeEvent *event);
     void keyPressEvent(QKeyEvent *event);

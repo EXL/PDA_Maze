@@ -15,16 +15,14 @@
 
 #include "PlayField.h"
 
-#include <QApplication> // #include <qpe/qpeapplication.h>
-#include <QTimer>       // #include <qtimer.h>
-#include <QMessageBox>  // #include <qmessagebox.h>
-#include <QWidget>      // #include <qwidget.h>
-#include <QPainter>     // #include <qpainter.h>
-#include <QFont>        // #include <qfont.h>
-#include <QFontMetrics> // #include <qfontmetrics.h>
+#include <QApplication>
+#include <QTimer>
+#include <QMessageBox>
+#include <QWidget>
+#include <QPainter>
+#include <QFont>
+#include <QFontMetrics>
 #include <QKeyEvent>
-
-#include <stdlib.h>
 
 #include "data.c"
 
@@ -32,9 +30,9 @@ PlayField::PlayField(QWidget *parent, const char *name) :
     QWidget(parent/*, name, f*/)
 {
     /* set up the default values for some member variables */
-    m_timer_mode = TimerUp;
-    m_map_mode = MapBuild;
-    m_size = 9;
+    /*m_timer_mode = TimerUp;
+    m_map_mode = MapAll;
+    m_size = 9;*/
     m_xpos = -1;
     m_ypos = -1;
     m_dir = North;
@@ -94,15 +92,30 @@ PlayField::~PlayField()
     delete m_timer;
 }
 
-void PlayField::paintEvent(QPaintEvent *event)
+void PlayField::setMapSize(int size)
+{
+    m_size = size;
+}
+
+void PlayField::setTimer_mode(const TimerModes &timer_mode)
+{
+    m_timer_mode = timer_mode;
+}
+
+void PlayField::setMap_mode(const MapModes &map_mode)
+{
+    m_map_mode = map_mode;
+}
+
+void PlayField::paintEvent(QPaintEvent */*event*/)
 {
     switch (m_state) {
     case Intro:
-	drawIntro();
-	break;
+        drawIntro();
+        break;
     case Playing:
-	drawPlaying();
-	break;
+        drawPlaying();
+        break;
     case ViewMap:
 	drawViewMap();
 	break;

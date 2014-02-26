@@ -13,16 +13,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    enum TimerMode {
-        TimerUp,
-        TimerDown
-    };
-
-    enum MapModes {
-        MapAll,
-        MapBuild,
-        MapNone,
-    };
+    bool isRunning;
 
     IniConfig *m_ini_PDA_Maze;
     PlayField *m_playField;
@@ -45,6 +36,7 @@ class MainWindow : public QMainWindow
     QMenu *m_menupSize;
     QMenu *m_menuAbout;
 
+    void resetMazeVariables();
     void createActions();
     QMenu *createTimerMenu();
     QMenu *createMapModeMenu();
@@ -54,6 +46,8 @@ private slots:
     void slotTimerModeChange(QAction *);
     void slotMapModeChange(QAction *);
     void slotMapSizeChange(QAction *);
+    void gameIsRunning() { isRunning = true; }
+    void gameIsntRunning() { isRunning = false; }
 protected:
     void closeEvent(QCloseEvent *event);
 public:
