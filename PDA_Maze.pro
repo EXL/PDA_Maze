@@ -18,7 +18,6 @@ QMAKE_CXXFLAGS_DEBUG += -D_DEBUG
 SOURCES += main.cpp \
     MainWindow.cpp \
     IniConfig.cpp \
-    data.c \
     PlayField.cpp
 
 HEADERS  += \
@@ -27,3 +26,6 @@ HEADERS  += \
     PlayField.h
 
 OTHER_FILES +=
+
+RESOURCES += \
+    PDA_Maze.qrc

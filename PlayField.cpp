@@ -20,8 +20,6 @@
 #include <QFont>
 #include <QFontMetrics>
 
-#include "data.c"
-
 PlayField::PlayField(QWidget *parent) :
     QWidget(parent/*, name, f*/)
 {
@@ -49,37 +47,45 @@ PlayField::PlayField(QWidget *parent) :
     ypos_inc[West] = 0;
 
     /* load the images from the data source */
-    m_bkg_east.loadFromData(bkg_east_data_, sizeof (bkg_east_data_));
-    m_bkg_north.loadFromData(bkg_north_data_, sizeof (bkg_north_data_));
-    m_bkg_south.loadFromData(bkg_south_data_, sizeof (bkg_south_data_));
-    m_bkg_west.loadFromData(bkg_west_data_, sizeof (bkg_west_data_));
-    m_close_center.loadFromData(close_center_data_, sizeof (close_center_data_));
-    m_close_center_bright.loadFromData(close_center_bright_data_, sizeof (close_center_bright_data_));
-    m_close_left.loadFromData(close_left_data_, sizeof (close_left_data_));
-    m_close_left_bright.loadFromData(close_left_bright_data_, sizeof (close_left_bright_data_));
-    m_close_right.loadFromData(close_right_data_, sizeof (close_right_data_));
-    m_close_right_bright.loadFromData(close_right_bright_data_, sizeof (close_right_bright_data_));
-    m_cmp_east.loadFromData(cmp_east_data_, sizeof (cmp_east_data_));
-    m_cmp_north.loadFromData(cmp_north_data_, sizeof (cmp_north_data_));
-    m_cmp_south.loadFromData(cmp_south_data_, sizeof (cmp_south_data_));
-    m_cmp_west.loadFromData(cmp_west_data_, sizeof (cmp_west_data_));
-    m_far_center.loadFromData(far_center_data_, sizeof (far_center_data_));
-    m_far_center_bright.loadFromData(far_center_bright_data_, sizeof (far_center_bright_data_));
-    m_far_left.loadFromData(far_left_data_, sizeof (far_left_data_));
-    m_far_left_bright.loadFromData(far_left_bright_data_, sizeof (far_left_bright_data_));
-    m_far_right.loadFromData(far_right_data_, sizeof (far_right_data_));
-    m_far_right_bright.loadFromData(far_right_bright_data_, sizeof (far_right_bright_data_));
-    m_ground.loadFromData(ground_data_, sizeof (ground_data_));
-    m_middle_center.loadFromData(middle_center_data_, sizeof (middle_center_data_));
-    m_middle_center_bright.loadFromData(middle_center_bright_data_, sizeof (middle_center_bright_data_));
-    m_middle_left.loadFromData(middle_left_data_, sizeof (middle_left_data_));
-    m_middle_left_bright.loadFromData(middle_left_bright_data_, sizeof (middle_left_bright_data_));
-    m_middle_right.loadFromData(middle_right_data_, sizeof (middle_right_data_));
-    m_middle_right_bright.loadFromData(middle_right_bright_data_, sizeof (middle_right_bright_data_));
-    m_numbers.loadFromData(numbers_data_, sizeof (numbers_data_));
-    m_timeup.loadFromData(timeup_data_, sizeof (timeup_data_));
-    m_title.loadFromData(title_data_, sizeof (title_data_));
-    m_youwin.loadFromData(youwin_data_, sizeof (youwin_data_));
+
+    m_bkg_east.load("://images/bkg_east.png");
+    m_bkg_north.load("://images/bkg_north.png");
+    m_bkg_south.load("://images/bkg_south.png");
+    m_bkg_west.load("://images/bkg_west.png");
+
+    m_close_center.load("://images/close_center.png");
+    m_close_center_bright.load("://images/close_center_bright.png");
+    m_close_left.load("://images/close_left.png");
+    m_close_left_bright.load("://images/close_left_bright.png");
+    m_close_right.load("://images/close_right.png");
+    m_close_right_bright.load("://images/close_right_bright.png");
+
+
+    m_cmp_east.load("://images/cmp_east.png");
+    m_cmp_north.load("://images/cmp_north.png");
+    m_cmp_south.load("://images/cmp_south.png");
+    m_cmp_west.load("://images/cmp_west.png");
+
+    m_far_center.load("://images/far_center.png");
+    m_far_center_bright.load("://images/far_center_bright.png");
+    m_far_left.load("://images/far_left.png");
+    m_far_left_bright.load("://images/far_left_bright.png");
+    m_far_right.load("://images/far_right.png");
+    m_far_right_bright.load("://images/far_right_bright.png");
+
+    m_ground.load("://images/ground.png");
+
+    m_middle_center.load("://images/middle_center.png");
+    m_middle_center_bright.load("://images/middle_center_bright.png");
+    m_middle_left.load("://images/middle_left.png");
+    m_middle_left_bright.load("://images/middle_left_bright.png");
+    m_middle_right.load("://images/middle_right.png");
+    m_middle_right_bright.load("://images/middle_right_bright.png");
+
+    m_numbers.load("://images/numbers.png");
+    m_timeup.load("://images/timeup.png");
+    m_title.load("://images/title.png");
+    m_youwin.load("://images/youwin.png");
 }
 
 PlayField::~PlayField()
@@ -228,7 +234,7 @@ void PlayField::start(void)
 {
     m_state = Playing;
     m_timer->start(1000/*, false*/);
-    m_counter = (m_timer_mode == TimerDown) ? m_size * m_size : 0;
+    m_counter = (m_timer_mode == TimerDown) ? (m_size * m_size ) - 1 : 0;
     makeMaze();
     repaint();
 }

@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/bkg_east.png</file>
+        <file>images/bkg_north.png</file>
+        <file>images/bkg_south.png</file>
+        <file>images/bkg_west.png</file>
+        <file>images/close_center_bright.png</file>
+        <file>images/close_center.png</file>
+        <file>images/close_left_bright.png</file>
+        <file>images/close_left.png</file>
+        <file>images/close_right_bright.png</file>
+        <file>images/close_right.png</file>
+        <file>images/cmp_east.png</file>
+        <file>images/cmp_north.png</file>
+        <file>images/cmp_south.png</file>
+        <file>images/cmp_west.png</file>
+        <file>images/far_center_bright.png</file>
+        <file>images/far_center.png</file>
+        <file>images/far_left_bright.png</file>
+        <file>images/far_left.png</file>
+        <file>images/far_right_bright.png</file>
+        <file>images/far_right.png</file>
+        <file>images/ground.png</file>
+        <file>images/middle_center_bright.png</file>
+        <file>images/middle_center.png</file>
+        <file>images/middle_left_bright.png</file>
+        <file>images/middle_left.png</file>
+        <file>images/middle_right_bright.png</file>
+        <file>images/middle_right.png</file>
+        <file>images/numbers.png</file>
+        <file>images/timeup.png</file>
+        <file>images/title.png</file>
+        <file>images/youwin.png</file>
+    </qresource>
+</RCC>
