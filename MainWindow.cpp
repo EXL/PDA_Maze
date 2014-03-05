@@ -14,12 +14,17 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("PDA Maze");
 
     m_ini_PDA_Maze = new IniConfig();
-    m_ini_PDA_Maze->readIniConfig();
+    if (!(m_ini_PDA_Maze->readIniConfig())) {
+#ifdef _DEBUG
+        qDebug() << "Error reading config!";
+#endif
+    }
 
     m_playField = new PlayField(this);
     m_playField->updateTimerMode(m_ini_PDA_Maze->getV_cfg_timer_mode());
     m_playField->updateMapMode(m_ini_PDA_Maze->getV_cfg_map_mode());
     m_playField->updateSize(m_ini_PDA_Maze->getV_cfg_map_size());
+    m_playField->setFixedSize(160, 240);
 
     createActions();
 

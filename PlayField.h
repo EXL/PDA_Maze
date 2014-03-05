@@ -21,6 +21,10 @@
 #include <QTimer>
 #include <QWidget>
 
+#ifdef _DEBUG
+#include <QDebug>
+#endif
+
 class PlayField : public QWidget
 {
     Q_OBJECT
@@ -115,7 +119,7 @@ public slots:
     void stop(void);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent */*event*/);
     void showEvent(QShowEvent *event);
     void resizeEvent(QResizeEvent *event);
     void keyPressEvent(QKeyEvent *event);

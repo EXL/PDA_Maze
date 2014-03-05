@@ -31,6 +31,7 @@ bool IniConfig::readIniConfig()
         qDebug() << "[IniConfig.cpp::IniConfig::readIniConfig()]: "
                     "Error: Configuration File isn't Readable!";
 #endif
+        loadDefaultSettings();
         return false;
     } else {
         m_cfg_PDA_Maze->beginGroup("PDA_Maze");

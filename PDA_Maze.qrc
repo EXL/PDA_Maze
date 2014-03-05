@@ -31,5 +31,43 @@
         <file>images/timeup.png</file>
         <file>images/title.png</file>
         <file>images/youwin.png</file>
+        <file>images_xpm/bkg_east.xpm</file>
+        <file>images_xpm/bkg_north.xpm</file>
+        <file>images_xpm/bkg_south.xpm</file>
+        <file>images_xpm/bkg_west.xpm</file>
+        <file>images_xpm/close_center_bright.xpm</file>
+        <file>images_xpm/close_center.xpm</file>
+        <file>images_xpm/close_left_bright.xpm</file>
+        <file>images_xpm/close_left.xpm</file>
+        <file>images_xpm/close_right_bright.xpm</file>
+        <file>images_xpm/close_right.xpm</file>
+        <file>images_xpm/cmp_east.xpm</file>
+        <file>images_xpm/cmp_north.xpm</file>
+        <file>images_xpm/cmp_south.xpm</file>
+        <file>images_xpm/cmp_west.xpm</file>
+        <file>images_xpm/done.xpm</file>
+        <file>images_xpm/far_center_bright.xpm</file>
+        <file>images_xpm/far_center.xpm</file>
+        <file>images_xpm/far_left_bright.xpm</file>
+        <file>images_xpm/far_left.xpm</file>
+        <file>images_xpm/far_right_bright.xpm</file>
+        <file>images_xpm/far_right.xpm</file>
+        <file>images_xpm/ground.xpm</file>
+        <file>images_xpm/loading.xpm</file>
+        <file>images_xpm/middle_center_bright.xpm</file>
+        <file>images_xpm/middle_center.xpm</file>
+        <file>images_xpm/middle_left_bright.xpm</file>
+        <file>images_xpm/middle_left.xpm</file>
+        <file>images_xpm/middle_right_bright.xpm</file>
+        <file>images_xpm/middle_right.xpm</file>
+        <file>images_xpm/numbers.xpm</file>
+        <file>images_xpm/options.xpm</file>
+        <file>images_xpm/optionson.xpm</file>
+        <file>images_xpm/soundoff.xpm</file>
+        <file>images_xpm/soundon.xpm</file>
+        <file>images_xpm/start.xpm</file>
+        <file>images_xpm/timeup.xpm</file>
+        <file>images_xpm/title.xpm</file>
+        <file>images_xpm/youwin.xpm</file>
     </qresource>
 </RCC>

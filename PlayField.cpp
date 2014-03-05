@@ -46,9 +46,47 @@ PlayField::PlayField(QWidget *parent) :
     ypos_inc[South] = 1;
     ypos_inc[West] = 0;
 
-    /* load the images from the data source */
+    m_bkg_east.load("://images_xpm/bkg_east.xpm");
+    m_bkg_north.load("://images_xpm/bkg_north.xpm");
+    m_bkg_south.load("://images_xpm/bkg_south.xpm");
+    m_bkg_west.load("://images_xpm/bkg_west.xpm");
 
-    m_bkg_east.load("://images/bkg_east.png");
+    m_close_center.load("://images_xpm/close_center.xpm");
+    m_close_center_bright.load("://images_xpm/close_center_bright.xpm");
+    m_close_left.load("://images_xpm/close_left.xpm");
+    m_close_left_bright.load("://images_xpm/close_left_bright.xpm");
+    m_close_right.load("://images_xpm/close_right.xpm");
+    m_close_right_bright.load("://images_xpm/close_right_bright.xpm");
+
+    m_cmp_east.load("://images_xpm/cmp_east.xpm");
+    m_cmp_north.load("://images_xpm/cmp_north.xpm");
+    m_cmp_south.load("://images_xpm/cmp_south.xpm");
+    m_cmp_west.load("://images_xpm/cmp_west.xpm");
+
+    m_far_center.load("://images_xpm/far_center.xpm");
+    m_far_center_bright.load("://images_xpm/far_center_bright.xpm");
+    m_far_left.load("://images_xpm/far_left.xpm");
+    m_far_left_bright.load("://images_xpm/far_left_bright.xpm");
+    m_far_right.load("://images_xpm/far_right.xpm");
+    m_far_right_bright.load("://images_xpm/far_right_bright.xpm");
+
+    m_ground.load("://images_xpm/ground.xpm");
+
+    m_middle_center.load("://images_xpm/middle_center.xpm");
+    m_middle_center_bright.load("://images_xpm/middle_center_bright.xpm");
+    m_middle_left.load("://images_xpm/middle_left.xpm");
+    m_middle_left_bright.load("://images_xpm/middle_left_bright.xpm");
+    m_middle_right.load("://images_xpm/middle_right.xpm");
+    m_middle_right_bright.load("://images_xpm/middle_right_bright.xpm");
+
+    m_numbers.load("://images_xpm/numbers.xpm");
+    m_timeup.load("://images_xpm/timeup.xpm");
+    m_title.load("://images_xpm/title.xpm");
+    m_youwin.load("://images_xpm/youwin.xpm");
+
+    /* Load the images from the resource file */
+
+    /*m_bkg_east.load("://images/bkg_east.png");
     m_bkg_north.load("://images/bkg_north.png");
     m_bkg_south.load("://images/bkg_south.png");
     m_bkg_west.load("://images/bkg_west.png");
@@ -59,7 +97,6 @@ PlayField::PlayField(QWidget *parent) :
     m_close_left_bright.load("://images/close_left_bright.png");
     m_close_right.load("://images/close_right.png");
     m_close_right_bright.load("://images/close_right_bright.png");
-
 
     m_cmp_east.load("://images/cmp_east.png");
     m_cmp_north.load("://images/cmp_north.png");
@@ -85,7 +122,7 @@ PlayField::PlayField(QWidget *parent) :
     m_numbers.load("://images/numbers.png");
     m_timeup.load("://images/timeup.png");
     m_title.load("://images/title.png");
-    m_youwin.load("://images/youwin.png");
+    m_youwin.load("://images/youwin.png");*/
 }
 
 PlayField::~PlayField()
@@ -94,24 +131,24 @@ PlayField::~PlayField()
     delete m_timer;
 }
 
-void PlayField::paintEvent(QPaintEvent *event)
+void PlayField::paintEvent(QPaintEvent */*event*/)
 {
     switch (m_state) {
     case Intro:
-    drawIntro();
-    break;
+        drawIntro();
+        break;
     case Playing:
-    drawPlaying();
-    break;
+        drawPlaying();
+        break;
     case ViewMap:
-    drawViewMap();
-    break;
+        drawViewMap();
+        break;
     case GameOverWin:
-    drawGameOverWin();
-    break;
+        drawGameOverWin();
+        break;
     case GameOverLoose:
-    drawGameOverLoose();
-    break;
+        drawGameOverLoose();
+        break;
     }
 }
 
@@ -336,6 +373,8 @@ void PlayField::drawPlaying(void)
     QColor white(255, 255, 255);
     int max_x = width();
     int max_y = height();
+
+    qDebug() << max_x << max_y;
 
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
@@ -647,7 +686,7 @@ void PlayField::drawMazeView(QPainter &painter)
     painter.drawPixmap(0, 0, m_bkg_west);
     break;
     }
-    painter.drawPixmap(0, 120, m_ground);
+    painter.drawPixmap(0, 80, m_ground);
 
     switch (m_dir) {
     case North:
@@ -699,7 +738,7 @@ void PlayField::drawMazeView(QPainter &painter)
 
 void PlayField::drawCompass(QPainter &painter)
 {
-    int max_x = 240;
+    int max_x = 160;
 
     switch (m_dir) {
     case North:
@@ -719,17 +758,23 @@ void PlayField::drawCompass(QPainter &painter)
 
 void PlayField::drawTime(QPainter &painter)
 {
-    int max_x = 240;
+    int max_x = 160;
 
     int min = (m_counter / 60) % 60;
     int sec = m_counter % 60;
     int i;
+
     char str[5] = {
-    (min / 10) + '0', (min % 10) + '0', ':', (sec / 10) + '0', (sec % 10) + '0'
+        (char)((min / 10) + '0'),
+        (char)((min % 10) + '0'),
+        ':',
+        (char)((sec / 10) + '0'),
+        (char)((sec % 10) + '0')
     };
+
     for (i = 0; i < 5; i++) {
-    int number = str[i] - '0';
-    painter.drawPixmap(max_x - 60 + i * 12, max_x, m_numbers, number * 12, 0, 12, 18);
+        int number = str[i] - '0';
+        painter.drawPixmap(max_x - 60 + i * 12, max_x, m_numbers, number * 12, 0, 12, 18);
     }
 }
 
@@ -738,23 +783,23 @@ void PlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffs
     if (block == 255) {
     if (dist == DistFar) {
         if (xoffset < 0) {
-        drawFarCenter(painter, 120 - 18 + (xoffset * 36));
-        drawFarLeft(painter, 120 - 18 + (xoffset * 36) + 36);
+        drawFarCenter(painter, 80 - 12 + (xoffset * 24));
+        drawFarLeft(painter, 80 - 12 + (xoffset * 24) + 24);
         } else if (xoffset == 0) {
-        drawFarCenter(painter, 120 - 18);
+        drawFarCenter(painter, 80 - 12);
         } else if (xoffset > 0) {
-        drawFarCenter(painter, 120 - 18 + (xoffset * 36));
-        drawFarRight(painter, 120 - 18 + (xoffset * 36) - 15);
+        drawFarCenter(painter, 80 - 12 + (xoffset * 24));
+        drawFarRight(painter, 80 - 12 + (xoffset * 24) - 10);
         }
     } else if (dist == DistMid) {
         if (xoffset < 0) {
-        drawMidCenter(painter, 120 - 49 - (99 - 36) + (xoffset * 36)); // 49 -> 49.5
-        drawMidLeft(painter, 120 - 49 - (99 - 36) + (xoffset * 36) + 99);
+        drawMidCenter(painter, 80 - 33 - (66 - 24) + (xoffset * 24)); // 49 -> 49.5
+        drawMidLeft(painter, 80 - 33 - (66 - 24) + (xoffset * 24) + 66);
         } else if (xoffset == 0) {
-        drawMidCenter(painter, 120 - 49);
+        drawMidCenter(painter, 80 - 33);
         } else if (xoffset > 0) {
-        drawMidCenter(painter, 120 - 49 + (99 - 36) + (xoffset * 36));
-        drawMidRight(painter, 120 - 49 + (99 - 36) + (xoffset * 36) - 31); // 30 -> 30.5
+        drawMidCenter(painter, 80 - 33 + (66 - 24) + (xoffset * 24));
+        drawMidRight(painter, 80 - 33 + (66 - 24) + (xoffset * 24) - 21); // 30 -> 30.5
         }
     } else if (dist == DistClose) {
         if (xoffset < 0) {
@@ -770,7 +815,7 @@ void PlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffs
 
 void PlayField::drawFarCenter(QPainter &painter, int xx)
 {
-    painter.drawPixmap(xx, 120 - 18,
+    painter.drawPixmap(xx, 80 - 12 + 1,
     (m_dir == North || m_dir == West) ? m_far_center_bright : m_far_center);
 }
 
@@ -780,11 +825,14 @@ void PlayField::drawFarLeft(QPainter &painter, int xx)
     int y;
 
     pix = (m_dir == North || m_dir == East) ? m_far_left_bright : m_far_left;
-    for (y = 0; y < 16; y++) { // 16.5 -> 16
-    painter.drawPixmap(xx, 120 - 18 + y, pix, 0, y, y, 1);
-    painter.drawPixmap(xx, 120 - 18 + 34 - y, pix, 0, 34 - y, y, 1); // 34.5 -> 34
+    for (y = 0; y < 11; y++) { // 16.5 -> 16
+        if (!y) {
+            continue;
+        }
+    painter.drawPixmap(xx, 80 - 12 + y, pix, 0, y, y, 1);
+    painter.drawPixmap(xx, 80 - 12 + 24 - y, pix, 0, 23 - y, y, 1); // 34.5 -> 34
     }
-    painter.drawPixmap(xx, 120 - 18 + 16, pix, 0, 16, 18, 3); // 16.5 -> 16
+    painter.drawPixmap(xx, 80 - 12 + 11, pix, 0, 11, 12, 3); // 16.5 -> 16
 }
 
 void PlayField::drawFarRight(QPainter &painter, int xx)
@@ -793,16 +841,16 @@ void PlayField::drawFarRight(QPainter &painter, int xx)
     int y;
 
     pix = (m_dir == South || m_dir == West) ? m_far_right_bright : m_far_right;
-    for (y = 0; y < 17; y++) { // 16.5 -> 16
-    painter.drawPixmap(xx + 17 - y, 120 - 18 + y, pix, 17 - y, y, y, 1); // 16.5 -> 16
-    painter.drawPixmap(xx + 17 - y, 120 - 18 + 36 - y, pix, 17 - y, 36 - y, y, 1); // 16.5 -> 16
+    for (y = 0; y < 11; y++) { // 16.5 -> 16
+    painter.drawPixmap(xx + 11 - y, 80 - 12 + y, pix, 11 - y, y, y, 1); // 16.5 -> 16
+    painter.drawPixmap(xx + 11 - y, 80 - 12 + 24 - y + 1, pix, 11 - y, 24 - y, y, 1); // 16.5 -> 16
     }
-    painter.drawPixmap(xx, 120 - 18 + 16, pix, 0, 16, 18, 4); // 16.5 -> 16
+    painter.drawPixmap(xx, 80 - 12 + 11, pix, 0, 11, 12, 4); // 16.5 -> 16
 }
 
 void PlayField::drawMidCenter(QPainter &painter, int xx)
 {
-    painter.drawPixmap(xx, 120 - 49,
+    painter.drawPixmap(xx, 80 - 33 + 1,
     (m_dir == North || m_dir == West) ? m_middle_center_bright : m_middle_center); // 49 -> 49.5
 }
 
@@ -812,11 +860,14 @@ void PlayField::drawMidLeft(QPainter &painter, int xx)
     int y;
 
     pix = (m_dir == North || m_dir == East) ? m_middle_left_bright : m_middle_left;
-    for (y = 0; y < 33; y++) {
-    painter.drawPixmap(xx, 120 - 49 + y, pix, 0, y, y, 1); // 49 -> 49.5
-    painter.drawPixmap(xx, 120 - 49 + 99 - y, pix, 0, 99 - y, y, 1); // 49 -> 49.5
+    for (y = 0; y < 22; y++) {
+        if (!y) {
+            continue;
+        }
+    painter.drawPixmap(xx, 80 - 33 + y, pix, 0, y, y, 1); // 49 -> 49.5
+    painter.drawPixmap(xx, 80 - 33 + 66 - y, pix, 0, 66 - y, y, 1); // 49 -> 49.5
     }
-    painter.drawPixmap(xx, 120 - 49 + 33, pix, 0, 33, 36, 37); // 49 -> 49.5, 37 -> 37.5
+    painter.drawPixmap(xx, 80 - 33 + 22, pix, 0, 23, 24, 23); // 49 -> 49.5, 37 -> 37.5
 }
 
 void PlayField::drawMidRight(QPainter &painter, int xx)
@@ -825,11 +876,11 @@ void PlayField::drawMidRight(QPainter &painter, int xx)
     int y;
 
     pix = (m_dir == South || m_dir == West) ? m_middle_right_bright : m_middle_right;
-    for (y = 0; y < 34; y++) {
-    painter.drawPixmap(xx + 32 - y, 120 - 49 + y, pix, 34 - y, y, y, 1); // 49 -> 49.5
-    painter.drawPixmap(xx + 32 - y, 120 - 49 + 99 - y, pix, 34 - y, 99 - y, y, 1); // 49 -> 49.5
+    for (y = 0; y < 22; y++) {
+    painter.drawPixmap(xx + 22 - y, 80 - 33 + y, pix, 22 - y, y, y, 1); // 33 -> 33.5
+    painter.drawPixmap(xx + 22 - y, 80 - 33 + 66 - y + 1, pix, 22 - y, 66 - y, y, 1); // 33 -> 33.5
     }
-    painter.drawPixmap(xx, 120 - 49 + 32, pix, 0, 33, 36, 38); // 49 -> 49.5, 37 -> 37.5
+    painter.drawPixmap(xx, 80 - 33 + 22, pix, 0, 22, 24, 24); // 33 -> 33.5, 37 -> 37.5
 }
 
 void PlayField::drawCloseCenter(QPainter &painter)
@@ -844,11 +895,14 @@ void PlayField::drawCloseLeft(QPainter &painter)
     int y;
 
     pix = (m_dir == North || m_dir == East) ? m_close_left_bright : m_close_left;
-    for (y = 0; y < 76; y++) { // 76 -> 76.5
+    for (y = 0; y < 51; y++) { // 76 -> 76.5
+        if (!y) {
+            continue;
+        }
     painter.drawPixmap(0, y, pix, 0, y, y, 1);
-    painter.drawPixmap(0, 240 - y, pix, 0, 240 - y, y, 1);
+    painter.drawPixmap(0, 160 - y, pix, 0, 160 - y, y, 1);
     }
-    painter.drawPixmap(0, 76, pix, 0, 76, 75, 90); // 76 -> 76.5
+    painter.drawPixmap(0, 51, pix, 0, 51, 50, 60); // 76 -> 76.5
 }
 
 void PlayField::drawCloseRight(QPainter &painter)
@@ -857,9 +911,9 @@ void PlayField::drawCloseRight(QPainter &painter)
     int y;
 
     pix = (m_dir == South || m_dir == West) ? m_close_right_bright : m_close_right;
-    for (y = 0; y < 76; y++) { // 76 -> 76.5
-    painter.drawPixmap(240 - y, y, pix, 76 - y, y, y, 1); // 76 -> 76.5
-    painter.drawPixmap(240 - y, 240 - y, pix, 76 - y, 240 - y, y, 1); // 76 -> 76.5
+    for (y = 0; y < 51; y++) { // 76 -> 76.5
+    painter.drawPixmap(160 - y + 1, y, pix, 51 - y - 1, y, y, 1); // 76 -> 76.5
+    painter.drawPixmap(160 - y, 160 - y, pix, 51 - y - 1, 160 - y, y, 1); // 76 -> 76.5
     }
-    painter.drawPixmap(165, 76, pix, 0, 76, 75, 90); // 76 -> 76.5
+    painter.drawPixmap(110, 51, pix, 0, 51, 50, 60); // 76 -> 76.5
 }
