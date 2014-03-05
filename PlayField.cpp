@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002 Robert Ernst <robert.ernst@maxxio.com>
+ * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
  *
  * This file may be distributed and/or modified under the terms of the
  * GNU General Public License version 2 as published by the Free Software
@@ -23,7 +24,7 @@
 PlayField::PlayField(QWidget *parent) :
     QWidget(parent/*, name, f*/)
 {
-    /* set up the default values for some member variables */
+    /* Setup the default values for some member variables */
     m_timer_mode = TimerUp;
     m_map_mode = MapBuild;
     m_size = 9;
@@ -36,7 +37,7 @@ PlayField::PlayField(QWidget *parent) :
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timerTick()));
 
-    /* initialize the xpos/ypos increment counter */
+    /* Initialize the xpos/ypos increment counter */
     xpos_inc[North] = 0;
     xpos_inc[East] = 1;
     xpos_inc[South] = 0;
@@ -46,6 +47,7 @@ PlayField::PlayField(QWidget *parent) :
     ypos_inc[South] = 1;
     ypos_inc[West] = 0;
 
+    /* Load XMP images */
     m_bkg_east.load("://images_xpm/bkg_east.xpm");
     m_bkg_north.load("://images_xpm/bkg_north.xpm");
     m_bkg_south.load("://images_xpm/bkg_south.xpm");
@@ -83,52 +85,6 @@ PlayField::PlayField(QWidget *parent) :
     m_timeup.load("://images_xpm/timeup.xpm");
     m_title.load("://images_xpm/title.xpm");
     m_youwin.load("://images_xpm/youwin.xpm");
-
-    /* Load the images from the resource file */
-
-    /*m_bkg_east.load("://images/bkg_east.png");
-    m_bkg_north.load("://images/bkg_north.png");
-    m_bkg_south.load("://images/bkg_south.png");
-    m_bkg_west.load("://images/bkg_west.png");
-
-    m_close_center.load("://images/close_center.png");
-    m_close_center_bright.load("://images/close_center_bright.png");
-    m_close_left.load("://images/close_left.png");
-    m_close_left_bright.load("://images/close_left_bright.png");
-    m_close_right.load("://images/close_right.png");
-    m_close_right_bright.load("://images/close_right_bright.png");
-
-    m_cmp_east.load("://images/cmp_east.png");
-    m_cmp_north.load("://images/cmp_north.png");
-    m_cmp_south.load("://images/cmp_south.png");
-    m_cmp_west.load("://images/cmp_west.png");
-
-    m_far_center.load("://images/far_center.png");
-    m_far_center_bright.load("://images/far_center_bright.png");
-    m_far_left.load("://images/far_left.png");
-    m_far_left_bright.load("://images/far_left_bright.png");
-    m_far_right.load("://images/far_right.png");
-    m_far_right_bright.load("://images/far_right_bright.png");
-
-    m_ground.load("://images/ground.png");
-
-    m_middle_center.load("://images/middle_center.png");
-    m_middle_center_bright.load("://images/middle_center_bright.png");
-    m_middle_left.load("://images/middle_left.png");
-    m_middle_left_bright.load("://images/middle_left_bright.png");
-    m_middle_right.load("://images/middle_right.png");
-    m_middle_right_bright.load("://images/middle_right_bright.png");
-
-    m_numbers.load("://images/numbers.png");
-    m_timeup.load("://images/timeup.png");
-    m_title.load("://images/title.png");
-    m_youwin.load("://images/youwin.png");*/
-}
-
-PlayField::~PlayField()
-{
-    delete m_pixmap;
-    delete m_timer;
 }
 
 void PlayField::paintEvent(QPaintEvent */*event*/)
@@ -774,7 +730,7 @@ void PlayField::drawTime(QPainter &painter)
 
     for (i = 0; i < 5; i++) {
         int number = str[i] - '0';
-        painter.drawPixmap(max_x - 60 + i * 12, max_x, m_numbers, number * 12, 0, 12, 18);
+        painter.drawPixmap(118 + i * 8, max_x, m_numbers, number * 8, 0, 8, 12);
     }
 }
 
@@ -916,4 +872,10 @@ void PlayField::drawCloseRight(QPainter &painter)
     painter.drawPixmap(160 - y, 160 - y, pix, 51 - y - 1, 160 - y, y, 1); // 76 -> 76.5
     }
     painter.drawPixmap(110, 51, pix, 0, 51, 50, 60); // 76 -> 76.5
+}
+
+PlayField::~PlayField()
+{
+    delete m_pixmap;
+    delete m_timer;
 }

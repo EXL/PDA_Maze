@@ -11,8 +11,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setWindowTitle("PDA Maze");
-
     m_ini_PDA_Maze = new IniConfig();
     if (!(m_ini_PDA_Maze->readIniConfig())) {
 #ifdef _DEBUG
@@ -24,13 +22,21 @@ MainWindow::MainWindow(QWidget *parent)
     m_playField->updateTimerMode(m_ini_PDA_Maze->getV_cfg_timer_mode());
     m_playField->updateMapMode(m_ini_PDA_Maze->getV_cfg_map_mode());
     m_playField->updateSize(m_ini_PDA_Maze->getV_cfg_map_size());
-    m_playField->setFixedSize(160, 240);
+    //m_playField->setFixedSize(160, 240);
 
     createActions();
 
     createMenus();
 
+#ifdef Q_OS_LINUX
+    setWindowTitle("Maze");
+#else
+    setWindowTitle("PDA Maze");
+#endif
+
     setCentralWidget(m_playField);
+
+    setFixedSize(160, 240);
 }
 
 void MainWindow::createActions()
@@ -46,12 +52,17 @@ void MainWindow::createActions()
     m_actionQuit->setShortcut(Qt::Key_F10);
     connect(m_actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
+    m_actionHelp = new QAction(this);
+    m_actionHelp->setText(tr("&Help..."));
+    m_actionHelp->setShortcut(Qt::Key_F1);
+    connect(m_actionHelp, SIGNAL(triggered()), this, SLOT(close()));
+
     m_actionAbout = new QAction(this);
     m_actionAbout->setText(tr("&About"));
     connect(m_actionAbout, SIGNAL(triggered()), m_playField, SLOT(stop()));
 
     m_actionAboutQt = new QAction(this);
-    m_actionAboutQt->setText(tr("About &Qt"));
+    m_actionAboutQt->setText(tr("About &Qt..."));
     connect(m_actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
@@ -209,14 +220,16 @@ void MainWindow::createMenus()
     m_menuSettings->addMenu(createMapModeMenu());
     m_menuSettings->addMenu(createMapSizeMenu());
 
-    m_menuAbout = new QMenu();
-    m_menuAbout->setTitle(tr("&About"));
-    m_menuAbout->addAction(m_actionAbout);
-    m_menuAbout->addAction(m_actionAboutQt);
+    m_menuHelp = new QMenu();
+    m_menuHelp->setTitle(tr("&Help"));
+    m_menuHelp->addAction(m_actionHelp);
+    m_menuHelp->addSeparator();
+    m_menuHelp->addAction(m_actionAbout);
+    m_menuHelp->addAction(m_actionAboutQt);
 
     menuBar()->addMenu(m_menuFile);
     menuBar()->addMenu(m_menuSettings);
-    menuBar()->addMenu(m_menuAbout);
+    menuBar()->addMenu(m_menuHelp);
 }
 
 void MainWindow::slotTimerModeChange(QAction *action)

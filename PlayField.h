@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2002 Robert Ernst <robert.ernst@maxxio.com>
+ * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
  *
  * This file may be distributed and/or modified under the terms of the
  * GNU General Public License version 2 as published by the Free Software

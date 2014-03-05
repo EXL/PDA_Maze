@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow
     QAction *m_actionMode;
     QActionGroup *m_actionGroupSize;
     QAction *m_actionSize;
+    QAction *m_actionHelp;
     QAction *m_actionAbout;
     QAction *m_actionAboutQt;
 
@@ -32,7 +33,7 @@ class MainWindow : public QMainWindow
     QMenu *m_menupTimer;
     QMenu *m_menupMode;
     QMenu *m_menupSize;
-    QMenu *m_menuAbout;
+    QMenu *m_menuHelp;
 
     void createActions();
     QMenu *createTimerMenu();
