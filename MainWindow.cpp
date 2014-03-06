@@ -23,12 +23,19 @@ MainWindow::MainWindow(QWidget *parent)
     m_playField->updateMapMode(m_ini_PDA_Maze->getV_cfg_map_mode());
     m_playField->updateSize(m_ini_PDA_Maze->getV_cfg_map_size());
     m_playField->updateStepStatus(m_ini_PDA_Maze->getV_cfg_step_show());
+    // TODO
 
     createActions();
     m_actionStep->setChecked(m_ini_PDA_Maze->getV_cfg_step_show());
+    if (m_ini_PDA_Maze->getV_cfg_scale_screen()) {
+        m_actionSmoothScreen->setChecked(m_ini_PDA_Maze->getV_cfg_screen_smoothing());
+    } else {
+        disableSmoothAction();
+    }
 
     createMenus();
 
+    // TODO
 #ifdef Q_OS_LINUX
     setWindowTitle("Maze");
 #else
@@ -58,6 +65,12 @@ void MainWindow::createActions()
     m_actionStep->setCheckable(true);
     connect(m_actionStep, SIGNAL(triggered(bool)),
             this, SLOT(slotShowStepChange(bool)));
+
+    m_actionSmoothScreen = new QAction(this);
+    m_actionSmoothScreen->setText(tr("Smooth"));
+    m_actionSmoothScreen->setCheckable(true);
+    connect(m_actionSmoothScreen, SIGNAL(triggered(bool)),
+            this, SLOT(slotSmoothScreenChange(bool)));
 
     m_actionHelp = new QAction(this);
     m_actionHelp->setText(tr("&Help"));
@@ -213,6 +226,59 @@ QMenu *MainWindow::createMapSizeMenu()
     return m_menupSize;
 }
 
+QMenu *MainWindow::createScreenSizeMenu()
+{
+    m_menupScreenSize = new QMenu();
+    m_menupScreenSize->setTitle(tr("S&creen Size"));
+
+    m_actionGroupScreenSize = new QActionGroup(this);
+    connect(m_actionGroupScreenSize, SIGNAL(triggered(QAction*)),
+            this, SLOT(slotScreenSizeChange(QAction *)));
+
+    for (size_t i = 0; i < 3; ++i) {
+        m_actionScreenSize = new QAction(this);
+        m_actionScreenSize->setCheckable(true);
+        m_actionScreenSize->setData((int)i);
+
+        m_menupScreenSize->addAction(m_actionScreenSize);
+        m_actionGroupScreenSize->addAction(m_actionScreenSize);
+
+        switch (i) {
+        case 0:
+        {
+            m_actionScreenSize->setText(tr("160xX"));
+            break;
+        }
+        case 1:
+        {
+            m_actionScreenSize->setText(tr("240xX"));
+            break;
+        }
+        case 2:
+        {
+            m_actionScreenSize->setText(tr("480xX"));
+            break;
+        }
+        default:
+        {
+#ifdef _DEBUG
+            qDebug() << "Error creating screen size menu!";
+#endif
+            break;
+        }
+        }
+
+        if ((int)i == m_ini_PDA_Maze->getV_cfg_scale_screen()) {
+            m_actionScreenSize->setChecked(true);
+        }
+    }
+
+    m_menupScreenSize->addSeparator();
+    m_menupScreenSize->addAction(m_actionSmoothScreen);
+
+    return m_menupScreenSize;
+}
+
 void MainWindow::createMenus()
 {
     m_menuFile = new QMenu();
@@ -228,6 +294,8 @@ void MainWindow::createMenus()
     m_menuSettings->addMenu(createMapSizeMenu());
     m_menuSettings->addSeparator();
     m_menuSettings->addAction(m_actionStep);
+    m_menuSettings->addSeparator();
+    m_menuSettings->addMenu(createScreenSizeMenu());
 
     m_menuHelp = new QMenu();
     m_menuHelp->setTitle(tr("&Help"));
@@ -239,6 +307,18 @@ void MainWindow::createMenus()
     menuBar()->addMenu(m_menuFile);
     menuBar()->addMenu(m_menuSettings);
     menuBar()->addMenu(m_menuHelp);
+}
+
+void MainWindow::disableSmoothAction()
+{
+    m_actionSmoothScreen->setChecked(false);
+    m_actionSmoothScreen->setDisabled(true);
+    m_ini_PDA_Maze->setV_cfg_screen_smoothing(false);
+#ifdef _DEBUG
+    qDebug() << "Smooth menu are disabled. "
+                "The cfg_screen_smoothing is: "
+             << m_ini_PDA_Maze->getV_cfg_screen_smoothing();
+#endif
 }
 
 void MainWindow::slotTimerModeChange(QAction *action)
@@ -268,6 +348,28 @@ void MainWindow::slotMapSizeChange(QAction *action)
     m_playField->updateSize(action->data().toInt());
 }
 
+void MainWindow::slotScreenSizeChange(QAction *action)
+{
+#ifdef _DEBUG
+    qDebug() << "Screen Size: " << action->data().toInt();
+#endif
+
+    switch (action->data().toInt()) {
+    case 0:
+    {
+        disableSmoothAction();
+        break;
+    }
+    default:
+    {
+        m_actionSmoothScreen->setEnabled(true);
+        break;
+    }
+    }
+
+    m_ini_PDA_Maze->setV_cfg_scale_screen(action->data().toInt());
+}
+
 void MainWindow::slotShowStepChange(bool step)
 {
 #ifdef _DEBUG
@@ -275,6 +377,14 @@ void MainWindow::slotShowStepChange(bool step)
 #endif
     m_ini_PDA_Maze->setV_cfg_step_show(step);
     m_playField->updateStepStatus(step);
+}
+
+void MainWindow::slotSmoothScreenChange(bool smooth)
+{
+#ifdef _DEBUG
+    qDebug() << "ScreenSmooth: " << smooth;
+#endif
+    m_ini_PDA_Maze->setV_cfg_screen_smoothing(smooth);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

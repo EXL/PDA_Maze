@@ -19,12 +19,15 @@ class MainWindow : public QMainWindow
     QAction *m_actionNewGame;
     QAction *m_actionQuit;
     QAction *m_actionStep;
+    QAction *m_actionSmoothScreen;
     QActionGroup *m_actionGroupTimer;
     QAction *m_actionTimer;
     QActionGroup *m_actionGroupMode;
     QAction *m_actionMode;
     QActionGroup *m_actionGroupSize;
     QAction *m_actionSize;
+    QActionGroup *m_actionGroupScreenSize;
+    QAction *m_actionScreenSize;
     QAction *m_actionHelp;
     QAction *m_actionAbout;
     QAction *m_actionAboutQt;
@@ -34,18 +37,23 @@ class MainWindow : public QMainWindow
     QMenu *m_menupTimer;
     QMenu *m_menupMode;
     QMenu *m_menupSize;
+    QMenu *m_menupScreenSize;
     QMenu *m_menuHelp;
 
     void createActions();
     QMenu *createTimerMenu();
     QMenu *createMapModeMenu();
     QMenu *createMapSizeMenu();
+    QMenu *createScreenSizeMenu();
     void createMenus();
+    void disableSmoothAction();
 private slots:
     void slotTimerModeChange(QAction *);
     void slotMapModeChange(QAction *);
     void slotMapSizeChange(QAction *);
+    void slotScreenSizeChange(QAction *);
     void slotShowStepChange(bool step);
+    void slotSmoothScreenChange(bool smooth);
 protected:
     void closeEvent(QCloseEvent *event);
 public:
