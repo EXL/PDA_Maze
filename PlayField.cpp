@@ -47,44 +47,47 @@ PlayField::PlayField(QWidget *parent) :
     ypos_inc[South] = 1;
     ypos_inc[West] = 0;
 
+    m_pixmap = new QPixmap(160, 177);
+    resize(160, 177);
+
     /* Load XMP images */
-    m_bkg_east.load("://images_xpm/bkg_east.xpm");
-    m_bkg_north.load("://images_xpm/bkg_north.xpm");
-    m_bkg_south.load("://images_xpm/bkg_south.xpm");
-    m_bkg_west.load("://images_xpm/bkg_west.xpm");
+    m_bkg_east.load("://images/bkg_east.xpm");
+    m_bkg_north.load("://images/bkg_north.xpm");
+    m_bkg_south.load("://images/bkg_south.xpm");
+    m_bkg_west.load("://images/bkg_west.xpm");
 
-    m_close_center.load("://images_xpm/close_center.xpm");
-    m_close_center_bright.load("://images_xpm/close_center_bright.xpm");
-    m_close_left.load("://images_xpm/close_left.xpm");
-    m_close_left_bright.load("://images_xpm/close_left_bright.xpm");
-    m_close_right.load("://images_xpm/close_right.xpm");
-    m_close_right_bright.load("://images_xpm/close_right_bright.xpm");
+    m_close_center.load("://images/close_center.xpm");
+    m_close_center_bright.load("://images/close_center_bright.xpm");
+    m_close_left.load("://images/close_left.xpm");
+    m_close_left_bright.load("://images/close_left_bright.xpm");
+    m_close_right.load("://images/close_right.xpm");
+    m_close_right_bright.load("://images/close_right_bright.xpm");
 
-    m_cmp_east.load("://images_xpm/cmp_east.xpm");
-    m_cmp_north.load("://images_xpm/cmp_north.xpm");
-    m_cmp_south.load("://images_xpm/cmp_south.xpm");
-    m_cmp_west.load("://images_xpm/cmp_west.xpm");
+    m_cmp_east.load("://images/cmp_east.png");
+    m_cmp_north.load("://images/cmp_north.png");
+    m_cmp_south.load("://images/cmp_south.png");
+    m_cmp_west.load("://images/cmp_west.png");
 
-    m_far_center.load("://images_xpm/far_center.xpm");
-    m_far_center_bright.load("://images_xpm/far_center_bright.xpm");
-    m_far_left.load("://images_xpm/far_left.xpm");
-    m_far_left_bright.load("://images_xpm/far_left_bright.xpm");
-    m_far_right.load("://images_xpm/far_right.xpm");
-    m_far_right_bright.load("://images_xpm/far_right_bright.xpm");
+    m_far_center.load("://images/far_center.xpm");
+    m_far_center_bright.load("://images/far_center_bright.xpm");
+    m_far_left.load("://images/far_left.xpm");
+    m_far_left_bright.load("://images/far_left_bright.xpm");
+    m_far_right.load("://images/far_right.xpm");
+    m_far_right_bright.load("://images/far_right_bright.xpm");
 
-    m_ground.load("://images_xpm/ground.xpm");
+    m_ground.load("://images/ground.xpm");
 
-    m_middle_center.load("://images_xpm/middle_center.xpm");
-    m_middle_center_bright.load("://images_xpm/middle_center_bright.xpm");
-    m_middle_left.load("://images_xpm/middle_left.xpm");
-    m_middle_left_bright.load("://images_xpm/middle_left_bright.xpm");
-    m_middle_right.load("://images_xpm/middle_right.xpm");
-    m_middle_right_bright.load("://images_xpm/middle_right_bright.xpm");
+    m_middle_center.load("://images/middle_center.xpm");
+    m_middle_center_bright.load("://images/middle_center_bright.xpm");
+    m_middle_left.load("://images/middle_left.xpm");
+    m_middle_left_bright.load("://images/middle_left_bright.xpm");
+    m_middle_right.load("://images/middle_right.xpm");
+    m_middle_right_bright.load("://images/middle_right_bright.xpm");
 
-    m_numbers.load("://images_xpm/numbers.xpm");
-    m_timeup.load("://images_xpm/timeup.xpm");
-    m_title.load("://images_xpm/title.xpm");
-    m_youwin.load("://images_xpm/youwin.xpm");
+    m_numbers.load("://images/numbers.xpm");
+    m_timeup.load("://images/timeup.xpm");
+    m_title.load("://images/title.xpm");
+    m_youwin.load("://images/youwin.xpm");
 }
 
 void PlayField::paintEvent(QPaintEvent */*event*/)
@@ -112,17 +115,6 @@ void PlayField::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
     setFocusPolicy(Qt::StrongFocus);
-}
-
-void PlayField::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
-    if (!m_pixmap || event->size() != event->oldSize()) {
-    if (m_pixmap) {
-        delete m_pixmap;
-    }
-    m_pixmap = new QPixmap(event->size().width(), event->size().height());
-    }
 }
 
 void PlayField::keyPressEvent(QKeyEvent *event)
@@ -339,8 +331,9 @@ void PlayField::drawPlaying(void)
     drawCompass(painter_pixmap);
     drawTime(painter_pixmap);
 
-    //painter_pixmap.flush();
+    //painter_pixmap.flush()
     painter_widget.drawPixmap(0, 0, *m_pixmap);
+    //painter_widget.drawPixmap(0, 0, m_pixmap->scaled(240, 320, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void PlayField::drawViewMap(void)

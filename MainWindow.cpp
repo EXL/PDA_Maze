@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     m_playField->updateTimerMode(m_ini_PDA_Maze->getV_cfg_timer_mode());
     m_playField->updateMapMode(m_ini_PDA_Maze->getV_cfg_map_mode());
     m_playField->updateSize(m_ini_PDA_Maze->getV_cfg_map_size());
-    //m_playField->setFixedSize(160, 240);
 
     createActions();
 
@@ -36,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setCentralWidget(m_playField);
 
-    setFixedSize(160, 240);
+    setFixedSize(160, 198);
 }
 
 void MainWindow::createActions()

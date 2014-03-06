@@ -122,7 +122,6 @@ public slots:
 protected:
     void paintEvent(QPaintEvent */*event*/);
     void showEvent(QShowEvent *event);
-    void resizeEvent(QResizeEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
 
