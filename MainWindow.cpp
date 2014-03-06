@@ -22,8 +22,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_playField->updateTimerMode(m_ini_PDA_Maze->getV_cfg_timer_mode());
     m_playField->updateMapMode(m_ini_PDA_Maze->getV_cfg_map_mode());
     m_playField->updateSize(m_ini_PDA_Maze->getV_cfg_map_size());
+    m_playField->updateStepStatus(m_ini_PDA_Maze->getV_cfg_step_show());
 
     createActions();
+    m_actionStep->setChecked(m_ini_PDA_Maze->getV_cfg_step_show());
 
     createMenus();
 
@@ -50,6 +52,12 @@ void MainWindow::createActions()
     m_actionQuit->setText(tr("&Quit"));
     m_actionQuit->setShortcut(Qt::Key_F10);
     connect(m_actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+
+    m_actionStep = new QAction(this);
+    m_actionStep->setText(tr("&Step Counter"));
+    m_actionStep->setCheckable(true);
+    connect(m_actionStep, SIGNAL(triggered(bool)),
+            this, SLOT(slotShowStepChange(bool)));
 
     m_actionHelp = new QAction(this);
     m_actionHelp->setText(tr("&Help..."));
@@ -218,6 +226,8 @@ void MainWindow::createMenus()
     m_menuSettings->addMenu(createTimerMenu());
     m_menuSettings->addMenu(createMapModeMenu());
     m_menuSettings->addMenu(createMapSizeMenu());
+    m_menuSettings->addSeparator();
+    m_menuSettings->addAction(m_actionStep);
 
     m_menuHelp = new QMenu();
     m_menuHelp->setTitle(tr("&Help"));
@@ -256,6 +266,15 @@ void MainWindow::slotMapSizeChange(QAction *action)
 #endif
     m_ini_PDA_Maze->setV_cfg_map_size(action->data().toInt());
     m_playField->updateSize(action->data().toInt());
+}
+
+void MainWindow::slotShowStepChange(bool step)
+{
+#ifdef _DEBUG
+    qDebug() << "StepShow: " << step;
+#endif
+    m_ini_PDA_Maze->setV_cfg_step_show(step);
+    m_playField->updateStepStatus(step);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

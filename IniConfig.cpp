@@ -38,6 +38,7 @@ bool IniConfig::readIniConfig()
         v_cfg_timer_mode = m_cfg_PDA_Maze->value("TimerMode").toInt();
         v_cfg_map_mode = m_cfg_PDA_Maze->value("MapMode").toInt();
         v_cfg_map_size = m_cfg_PDA_Maze->value("MapSize").toInt();
+        v_cfg_step_show = m_cfg_PDA_Maze->value("ShowStep").toBool();
         m_cfg_PDA_Maze->endGroup();
 
 #ifdef _DEBUG
@@ -46,6 +47,7 @@ bool IniConfig::readIniConfig()
                  << "\nv_cfg_timer_mode =" << v_cfg_timer_mode
                  << "\nv_cfg_map_mode =" << v_cfg_map_mode
                  << "\nv_cfg_map_size =" << v_cfg_map_size
+                 << "\nv_cfg_step_show =" << v_cfg_step_show
                  << "\n=== END DEBUG ===";
 #endif
 
@@ -82,6 +84,7 @@ bool IniConfig::writeIniConfig()
         m_cfg_PDA_Maze->setValue("TimerMode", v_cfg_timer_mode);
         m_cfg_PDA_Maze->setValue("MapMode",  v_cfg_map_mode);
         m_cfg_PDA_Maze->setValue("MapSize", v_cfg_map_size);
+        m_cfg_PDA_Maze->setValue("ShowStep", v_cfg_step_show);
         m_cfg_PDA_Maze->endGroup();
         return true;
     }
@@ -115,6 +118,16 @@ int IniConfig::getV_cfg_map_size() const
 void IniConfig::setV_cfg_map_size(int value)
 {
     v_cfg_map_size = value;
+}
+
+bool IniConfig::getV_cfg_step_show() const
+{
+    return v_cfg_step_show;
+}
+
+void IniConfig::setV_cfg_step_show(bool value)
+{
+    v_cfg_step_show = value;
 }
 
 IniConfig::~IniConfig()

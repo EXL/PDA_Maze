@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
 
     QAction *m_actionNewGame;
     QAction *m_actionQuit;
+    QAction *m_actionStep;
     QActionGroup *m_actionGroupTimer;
     QAction *m_actionTimer;
     QActionGroup *m_actionGroupMode;
@@ -44,6 +45,7 @@ private slots:
     void slotTimerModeChange(QAction *);
     void slotMapModeChange(QAction *);
     void slotMapSizeChange(QAction *);
+    void slotShowStepChange(bool step);
 protected:
     void closeEvent(QCloseEvent *event);
 public:

@@ -13,6 +13,7 @@ class IniConfig : public QObject
     int v_cfg_timer_mode;
     int v_cfg_map_mode;
     int v_cfg_map_size;
+    bool v_cfg_step_show;
 
     void loadDefaultSettings();
 public slots:
@@ -29,6 +30,8 @@ public:
     int getV_cfg_map_size() const;
 
     ~IniConfig();
+    bool getV_cfg_step_show() const;
+    void setV_cfg_step_show(bool value);
 };
 
 #endif // INICONFIG_H

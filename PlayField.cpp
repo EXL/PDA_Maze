@@ -34,7 +34,11 @@ PlayField::PlayField(QWidget *parent) :
     m_state = Intro;
     m_pixmap = 0;
     m_counter = 0;
+
     m_step = 0;
+    m_step_str = QString(tr("Step: %1"));
+    m_bool_step = false;
+
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timerTick()));
 
@@ -282,6 +286,12 @@ void PlayField::updateSize(int size)
     }
 }
 
+void PlayField::updateStepStatus(bool qStep)
+{
+    m_bool_step = qStep;
+    repaint();
+}
+
 void PlayField::drawIntro(void)
 {
     QPainter painter_pixmap(m_pixmap);
@@ -337,6 +347,7 @@ void PlayField::drawPlaying(void)
     drawMazeView(painter_pixmap);
     drawCompass(painter_pixmap);
     drawTime(painter_pixmap);
+    drawSteps(painter_pixmap);
 
     //painter_pixmap.flush()
     painter_widget.drawPixmap(0, 0, *m_pixmap);
@@ -400,6 +411,7 @@ void PlayField::drawGameOverWin(void)
     drawMazeView(painter_pixmap);
     drawCompass(painter_pixmap);
     drawTime(painter_pixmap);
+    drawSteps(painter_pixmap);
     painter_pixmap.drawPixmap(xoffs, yoffs, m_youwin);
 
     //painter_pixmap.flush();
@@ -422,6 +434,7 @@ void PlayField::drawGameOverLoose(void)
     drawMazeView(painter_pixmap);
     drawCompass(painter_pixmap);
     drawTime(painter_pixmap);
+    drawSteps(painter_pixmap);
     painter_pixmap.drawPixmap(xoffs, yoffs, m_timeup);
 
     //painter_pixmap.flush();
@@ -430,12 +443,11 @@ void PlayField::drawGameOverLoose(void)
 
 void PlayField::moveForward(void)
 {
-    m_step++;
-
     int xpos = m_xpos + xpos_inc[m_dir];
     int ypos = m_ypos + ypos_inc[m_dir];
 
     if (m_maze[ypos][xpos] != 255) {
+    m_step++;
     m_xpos = xpos;
     m_ypos = ypos;
     m_seen[m_ypos - 1][m_xpos - 1] = true;
@@ -457,12 +469,11 @@ void PlayField::moveForward(void)
 
 void PlayField::moveBackward(void)
 {
-    m_step++;
-
     int xpos = m_xpos - xpos_inc[m_dir];
     int ypos = m_ypos - ypos_inc[m_dir];
 
     if (m_maze[ypos][xpos] != 255) {
+    m_step++;
     m_xpos = xpos;
     m_ypos = ypos;
     m_seen[m_ypos - 1][m_xpos - 1] = true;
@@ -736,9 +747,19 @@ void PlayField::drawTime(QPainter &painter)
         int number = str[i] - '0';
         painter.drawPixmap(118 + i * 8, max_x + 2, m_numbers, number * 8, 0, 8, 12);
     }
+}
 
-//    painter.setPen(Qt::black);
-//    painter.drawText(100, max_x + 2, 16, 16, Qt::AlignCenter, QString("%1").arg(m_step));
+void PlayField::drawSteps(QPainter &painter)
+{
+    if (m_bool_step) {
+        int w = painter.fontMetrics().width(m_step_str.arg(m_step));
+        int h = painter.fontMetrics().height();
+
+        painter.fillRect(100, 2, w, h, QColor(242, 243, 244));
+
+        painter.setPen(Qt::black);
+        painter.drawText(100, 2, w, h, Qt::AlignRight, m_step_str.arg(m_step));
+    }
 }
 
 void PlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffset)

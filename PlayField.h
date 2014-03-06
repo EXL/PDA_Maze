@@ -54,6 +54,10 @@ private:
     static const int max_size = 49;
 
 private:
+    QString m_step_str;
+    size_t m_step;
+    bool m_bool_step;
+
     enum TimerModes m_timer_mode;
     enum MapModes m_map_mode;
     int m_size;
@@ -77,7 +81,6 @@ private:
     int xpos_inc[4];
     int ypos_inc[4];
     int m_counter;
-    int m_step;
     QTimer *m_timer;
     QPixmap *m_pixmap;
     QPixmap m_bkg_east;
@@ -116,6 +119,7 @@ public slots:
     void updateTimerMode(int timer_mode);
     void updateMapMode(int map_mode);
     void updateSize(int size);
+    void updateStepStatus(bool qStep);
     void timerTick(void);
     void start(void);
     void stop(void);
@@ -141,6 +145,7 @@ private:
     void drawMazeView(QPainter &painter);
     void drawCompass(QPainter &painter);
     void drawTime(QPainter &painter);
+    void drawSteps(QPainter &painter);
     void drawWall(QPainter &painter, int block, enum Dist dist, int xoffset);
     void drawFarCenter(QPainter &painter, int xx);
     void drawFarLeft(QPainter &painter, int xx);
