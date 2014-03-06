@@ -192,8 +192,9 @@ void PlayField::keyPressEvent(QKeyEvent *event)
 void PlayField::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
+
     if (m_state == Playing) {
-    int max_x = m_pixmap->width();
+    int max_x = width();
     if (event->y() > max_x) {
         /* click on the lower area of the screen: compass, maze, timer */
         m_state = ViewMap;
@@ -325,6 +326,25 @@ void PlayField::updateStepStatus(bool qStep)
     repaint();
 }
 
+void PlayField::updateScreenScale(int scale)
+{
+    if (!scale) {
+        m_scr_smooth = false;
+    }
+    m_scr_scale = scale;
+    repaint();
+}
+
+void PlayField::updateSmoothStatus(bool smooth)
+{
+    if (!m_scr_scale) {
+        m_scr_smooth = false;
+    } else {
+        m_scr_smooth = smooth;
+    }
+    repaint();
+}
+
 void PlayField::drawIntro(void)
 {
     QPainter painter_pixmap(m_pixmap);
@@ -333,8 +353,8 @@ void PlayField::drawIntro(void)
     QColor white(255, 255, 255);
     QColor dirtywhite(242, 243, 244);
 
-    int max_x = width();
-    int max_y = height();
+    int max_x = 160;
+    int max_y = 177;
 
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
@@ -358,9 +378,7 @@ void PlayField::drawIntro(void)
     painter_pixmap.drawText(4, (max_y / 2) + 25, max_x - (4 * 2), 50,
                             Qt::AlignHCenter | Qt::AlignVCenter,
                             m_rt_str_copyright);
-
-    //painter_pixmap.flush();
-    painter_widget.drawPixmap(0, 0, *m_pixmap);
+    drawAllOnWidget(painter_widget);
 }
 
 void PlayField::drawHelp(void)
@@ -371,8 +389,8 @@ void PlayField::drawHelp(void)
     QColor white(255, 255, 255);
     QColor dirtywhite(250, 240, 190);
 
-    int max_x = width();
-    int max_y = height();
+    int max_x = 160;
+    int max_y = 177;
 
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
@@ -396,9 +414,7 @@ void PlayField::drawHelp(void)
     painter_pixmap.drawText(5, (max_y / 2) + 25, max_x - (4 * 2), 50,
                             Qt::AlignLeft,
                             m_rt_str_kkbody);
-
-    //painter_pixmap.flush();
-    painter_widget.drawPixmap(0, 0, *m_pixmap);
+    drawAllOnWidget(painter_widget);
 }
 
 void PlayField::drawPlaying(void)
@@ -407,8 +423,8 @@ void PlayField::drawPlaying(void)
     QPainter painter_widget(this);
     QColor white(255, 255, 255);
 
-    int max_x = width();
-    int max_y = height();
+    int max_x = 160;
+    int max_y = 177;
 
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
@@ -417,10 +433,7 @@ void PlayField::drawPlaying(void)
     drawCompass(painter_pixmap);
     drawTime(painter_pixmap);
     drawSteps(painter_pixmap);
-
-    //painter_pixmap.flush()
-    painter_widget.drawPixmap(0, 0, *m_pixmap);
-    //painter_widget.drawPixmap(0, 0, m_pixmap->scaled(240, 320, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    drawAllOnWidget(painter_widget);
 }
 
 void PlayField::drawViewMap(void)
@@ -431,8 +444,10 @@ void PlayField::drawViewMap(void)
     QColor grey(192, 192, 192);
     QColor white(255, 255, 255);
     QColor red(255, 0, 0);
-    int max_x = width();
-    int max_y = height();
+
+    int max_x = 160;
+    int max_y = 177;
+
     int xsize = max_x / m_size;
     int ysize = max_x / m_size;
     int xoffs = (max_x - xsize * m_size) / 2;
@@ -459,9 +474,7 @@ void PlayField::drawViewMap(void)
     }
     drawCompass(painter_pixmap);
     drawTime(painter_pixmap);
-
-    //painter_pixmap.flush();
-    painter_widget.drawPixmap(0, 0, *m_pixmap);
+    drawAllOnWidget(painter_widget);
 }
 
 void PlayField::drawGameOverWin(void)
@@ -469,8 +482,9 @@ void PlayField::drawGameOverWin(void)
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
     QColor white(255, 255, 255);
-    int max_x = width();
-    int max_y = height();
+
+    int max_x = 160;
+    int max_y = 177;
 
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
@@ -482,9 +496,7 @@ void PlayField::drawGameOverWin(void)
     drawTime(painter_pixmap);
     drawSteps(painter_pixmap);
     painter_pixmap.drawPixmap(xoffs, yoffs, m_youwin);
-
-    //painter_pixmap.flush();
-    painter_widget.drawPixmap(0, 0, *m_pixmap);
+    drawAllOnWidget(painter_widget);
 }
 
 void PlayField::drawGameOverLoose(void)
@@ -492,8 +504,9 @@ void PlayField::drawGameOverLoose(void)
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
     QColor white(255, 255, 255);
-    int max_x = width();
-    int max_y = height();
+
+    int max_x = 160;
+    int max_y = 177;
 
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
@@ -505,9 +518,39 @@ void PlayField::drawGameOverLoose(void)
     drawTime(painter_pixmap);
     drawSteps(painter_pixmap);
     painter_pixmap.drawPixmap(xoffs, yoffs, m_timeup);
+    drawAllOnWidget(painter_widget);
+}
 
-    //painter_pixmap.flush();
-    painter_widget.drawPixmap(0, 0, *m_pixmap);
+void PlayField::drawAllOnWidget(QPainter &painter)
+{
+    switch (m_scr_scale) {
+    case 0:
+    default:
+    {
+        painter.drawPixmap(0, 0, *m_pixmap);
+        break;
+    }
+    case 1:
+    {
+        painter.drawPixmap(0, 0,
+                           m_pixmap->scaled(240, 265,
+                                            Qt::KeepAspectRatio,
+                                            (m_scr_smooth) ?
+                                                Qt::SmoothTransformation:
+                                                Qt::FastTransformation));
+        break;
+    }
+    case 2:
+    {
+        painter.drawPixmap(0, 0,
+                           m_pixmap->scaled(480, 531,
+                                            Qt::KeepAspectRatio,
+                                            (m_scr_smooth) ?
+                                                Qt::SmoothTransformation:
+                                                Qt::FastTransformation));
+        break;
+    }
+    }
 }
 
 void PlayField::moveForward(void)

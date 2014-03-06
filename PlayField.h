@@ -64,6 +64,9 @@ private:
     size_t m_step;
     bool m_bool_step;
 
+    int m_scr_scale;
+    bool m_scr_smooth;
+
     enum TimerModes m_timer_mode;
     enum MapModes m_map_mode;
     int m_size;
@@ -127,6 +130,8 @@ public slots:
     void updateMapMode(int map_mode);
     void updateSize(int size);
     void updateStepStatus(bool qStep);
+    void updateScreenScale(int scale);
+    void updateSmoothStatus(bool smooth);
     void timerTick(void);
     void start(void);
     void stop(void);
@@ -145,6 +150,7 @@ private:
     void drawViewMap(void);
     void drawGameOverWin(void);
     void drawGameOverLoose(void);
+    void drawAllOnWidget(QPainter &painter);
     void moveForward(void);
     void moveBackward(void);
     void turnLeft(void);

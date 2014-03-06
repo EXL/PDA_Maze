@@ -47,6 +47,7 @@ class MainWindow : public QMainWindow
     QMenu *createScreenSizeMenu();
     void createMenus();
     void disableSmoothAction();
+    void detFixedSize(int scale);
 private slots:
     void slotTimerModeChange(QAction *);
     void slotMapModeChange(QAction *);

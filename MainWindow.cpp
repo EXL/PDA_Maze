@@ -23,7 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_playField->updateMapMode(m_ini_PDA_Maze->getV_cfg_map_mode());
     m_playField->updateSize(m_ini_PDA_Maze->getV_cfg_map_size());
     m_playField->updateStepStatus(m_ini_PDA_Maze->getV_cfg_step_show());
-    // TODO
+    m_playField->updateScreenScale(m_ini_PDA_Maze->getV_cfg_scale_screen());
+    m_playField->updateSmoothStatus(m_ini_PDA_Maze->getV_cfg_screen_smoothing());
 
     createActions();
     m_actionStep->setChecked(m_ini_PDA_Maze->getV_cfg_step_show());
@@ -35,16 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     createMenus();
 
-    // TODO
-#ifdef Q_OS_LINUX
-    setWindowTitle("Maze");
-#else
-    setWindowTitle("PDA Maze");
-#endif
-
     setCentralWidget(m_playField);
 
-    setFixedSize(160, 198);
+    detFixedSize(m_ini_PDA_Maze->getV_cfg_scale_screen());
 }
 
 void MainWindow::createActions()
@@ -246,17 +240,17 @@ QMenu *MainWindow::createScreenSizeMenu()
         switch (i) {
         case 0:
         {
-            m_actionScreenSize->setText(tr("160xX"));
+            m_actionScreenSize->setText(tr("160x177"));
             break;
         }
         case 1:
         {
-            m_actionScreenSize->setText(tr("240xX"));
+            m_actionScreenSize->setText(tr("240x265"));
             break;
         }
         case 2:
         {
-            m_actionScreenSize->setText(tr("480xX"));
+            m_actionScreenSize->setText(tr("480x531"));
             break;
         }
         default:
@@ -321,6 +315,36 @@ void MainWindow::disableSmoothAction()
 #endif
 }
 
+void MainWindow::detFixedSize(int scale)
+{
+    int m = menuBar()->sizeHint().height();
+
+    switch (scale) {
+    case 1:
+    {
+        setWindowTitle(tr("PDA Maze"));
+        m_playField->setFixedSize(240, 265);
+        setFixedSize(240, 265 + m);
+        break;
+    }
+    case 2:
+    {
+        setWindowTitle(tr("PDA Maze"));
+        m_playField->setFixedSize(480, 531);
+        setFixedSize(480, 531 + m);
+        break;
+    }
+    case 0:
+    default:
+    {
+        setWindowTitle(tr("Maze"));
+        m_playField->setFixedSize(160, 177);
+        setFixedSize(160, 177 + m); //adjustSize() isn't working correctly
+        break;
+    }
+    }
+}
+
 void MainWindow::slotTimerModeChange(QAction *action)
 {
 #ifdef _DEBUG
@@ -368,6 +392,8 @@ void MainWindow::slotScreenSizeChange(QAction *action)
     }
 
     m_ini_PDA_Maze->setV_cfg_scale_screen(action->data().toInt());
+    m_playField->updateScreenScale(action->data().toInt());
+    detFixedSize(action->data().toInt());
 }
 
 void MainWindow::slotShowStepChange(bool step)
@@ -385,6 +411,7 @@ void MainWindow::slotSmoothScreenChange(bool smooth)
     qDebug() << "ScreenSmooth: " << smooth;
 #endif
     m_ini_PDA_Maze->setV_cfg_screen_smoothing(smooth);
+    m_playField->updateSmoothStatus(smooth);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
