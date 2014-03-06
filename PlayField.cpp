@@ -34,6 +34,7 @@ PlayField::PlayField(QWidget *parent) :
     m_state = Intro;
     m_pixmap = 0;
     m_counter = 0;
+    m_step = 0;
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timerTick()));
 
@@ -48,9 +49,8 @@ PlayField::PlayField(QWidget *parent) :
     ypos_inc[West] = 0;
 
     m_pixmap = new QPixmap(160, 177);
-    resize(160, 177);
 
-    /* Load XMP images */
+    /* Load XMP and PNG images */
     m_bkg_east.load("://images/bkg_east.xpm");
     m_bkg_north.load("://images/bkg_north.xpm");
     m_bkg_south.load("://images/bkg_south.xpm");
@@ -86,7 +86,7 @@ PlayField::PlayField(QWidget *parent) :
 
     m_numbers.load("://images/numbers.xpm");
     m_timeup.load("://images/timeup.xpm");
-    m_title.load("://images/title.xpm");
+    m_title.load("://images/title.png");
     m_youwin.load("://images/youwin.xpm");
 }
 
@@ -220,12 +220,14 @@ void PlayField::start(void)
     m_state = Playing;
     m_timer->start(1000/*, false*/);
     m_counter = (m_timer_mode == TimerDown) ? (m_size * m_size ) - 1 : 0;
+    m_step = 0;
     makeMaze();
     repaint();
 }
 
 void PlayField::stop(void)
 {
+    m_step = 0;
     if (m_state != Intro) {
     m_state = Intro;
     m_timer->stop();
@@ -286,6 +288,8 @@ void PlayField::drawIntro(void)
     QPainter painter_widget(this);
     QColor black(0, 0, 0);
     QColor white(255, 255, 255);
+    QColor dirtywhite(242, 243, 244);
+
     int max_x = width();
     int max_y = height();
 
@@ -293,22 +297,26 @@ void PlayField::drawIntro(void)
     painter_pixmap.setPen(white);
 
     QString copyright(tr("Original game by Bill Kendrick\n"
-                         "Ported to the Zaurus by Robert Ernst\n"
-                         "Ported to Qt and MotoMAGX by EXL"));
+                         "Zaurus port by Robert Ernst\n"
+                         "Qt and MotoMAGX port by EXL\n"
+                         "(c) 2001-2014"));
     QFont f1 = painter_pixmap.font();
-    f1.setPixelSize(40);
+    f1.setPixelSize(30);
     f1.setBold(true);
     QFont f2 = painter_pixmap.font();
-    f2.setPixelSize(12);
+    f2.setPixelSize(10);
     painter_pixmap.drawPixmap(0, 0, m_title);
     painter_pixmap.setFont(f1);
     painter_pixmap.setPen(black);
     painter_pixmap.drawText(5, 5, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, tr("PDA Maze"));
     painter_pixmap.setPen(white);
     painter_pixmap.drawText(0, 0, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, tr("PDA Maze"));
+
+    painter_pixmap.fillRect(3, (max_y / 2) + 25, max_x - (3 * 2), 50, dirtywhite);
+
     painter_pixmap.setFont(f2);
     painter_pixmap.setPen(black);
-    painter_pixmap.drawText(0, max_x, max_x, max_y - max_x, Qt::AlignHCenter | Qt::AlignVCenter, copyright);
+    painter_pixmap.drawText(4, (max_y / 2) + 25, max_x - (4 * 2), 50, Qt::AlignHCenter | Qt::AlignVCenter, copyright);
 
     //painter_pixmap.flush();
     painter_widget.drawPixmap(0, 0, *m_pixmap);
@@ -319,10 +327,9 @@ void PlayField::drawPlaying(void)
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
     QColor white(255, 255, 255);
+
     int max_x = width();
     int max_y = height();
-
-    qDebug() << max_x << max_y;
 
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
@@ -423,6 +430,8 @@ void PlayField::drawGameOverLoose(void)
 
 void PlayField::moveForward(void)
 {
+    m_step++;
+
     int xpos = m_xpos + xpos_inc[m_dir];
     int ypos = m_ypos + ypos_inc[m_dir];
 
@@ -448,6 +457,8 @@ void PlayField::moveForward(void)
 
 void PlayField::moveBackward(void)
 {
+    m_step++;
+
     int xpos = m_xpos - xpos_inc[m_dir];
     int ypos = m_ypos - ypos_inc[m_dir];
 
@@ -723,8 +734,11 @@ void PlayField::drawTime(QPainter &painter)
 
     for (i = 0; i < 5; i++) {
         int number = str[i] - '0';
-        painter.drawPixmap(118 + i * 8, max_x, m_numbers, number * 8, 0, 8, 12);
+        painter.drawPixmap(118 + i * 8, max_x + 2, m_numbers, number * 8, 0, 8, 12);
     }
+
+//    painter.setPen(Qt::black);
+//    painter.drawText(100, max_x + 2, 16, 16, Qt::AlignCenter, QString("%1").arg(m_step));
 }
 
 void PlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffset)

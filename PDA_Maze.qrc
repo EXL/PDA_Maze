@@ -31,5 +31,6 @@
         <file>images/timeup.xpm</file>
         <file>images/title.xpm</file>
         <file>images/youwin.xpm</file>
+        <file>images/title.png</file>
     </qresource>
 </RCC>

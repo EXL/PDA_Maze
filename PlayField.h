@@ -77,6 +77,7 @@ private:
     int xpos_inc[4];
     int ypos_inc[4];
     int m_counter;
+    int m_step;
     QTimer *m_timer;
     QPixmap *m_pixmap;
     QPixmap m_bkg_east;
