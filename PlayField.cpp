@@ -36,7 +36,6 @@ PlayField::PlayField(QWidget *parent) :
     m_counter = 0;
 
     m_step = 0;
-    m_step_str = QString(tr("Step: %1"));
     m_bool_step = false;
 
     m_timer = new QTimer(this);
@@ -92,6 +91,23 @@ PlayField::PlayField(QWidget *parent) :
     m_timeup.load("://images/timeup.xpm");
     m_title.load("://images/title.png");
     m_youwin.load("://images/youwin.xpm");
+
+    retranslateUi();
+}
+
+void PlayField::retranslateUi()
+{
+    m_rt_str_step = tr("Step: %1");
+    m_rt_str_copyright = tr("Original game by Bill Kendrick\n"
+                            "Zaurus port by Robert Ernst\n"
+                            "Qt and MotoMAGX port by EXL\n"
+                            "(c) 2001-2014");
+    m_rt_str_gamename = tr("PDA Maze");
+    m_rt_str_kktitle = tr("Control\nKeys");
+    m_rt_str_kkbody = tr("Movement: D-pad or W, A, S, D\n"
+                         "Show Map: Space or Enter\n"
+                         "New Game: F5\n"
+                         "Exit: Esc and F10");
 }
 
 void PlayField::paintEvent(QPaintEvent */*event*/)
@@ -112,6 +128,9 @@ void PlayField::paintEvent(QPaintEvent */*event*/)
     case GameOverLoose:
         drawGameOverLoose();
         break;
+    case Help:
+        drawHelp();
+        break;
     }
 }
 
@@ -126,21 +145,25 @@ void PlayField::keyPressEvent(QKeyEvent *event)
     QWidget::keyPressEvent(event);
     switch (event->key()) {
     case Qt::Key_Up:
+    case Qt::Key_W:
     if (m_state == Playing) {
         moveForward();
     }
     break;
     case Qt::Key_Down:
+    case Qt::Key_S:
     if (m_state == Playing) {
         moveBackward();
     }
     break;
     case Qt::Key_Left:
+    case Qt::Key_A:
     if (m_state == Playing) {
         turnLeft();
     }
     break;
     case Qt::Key_Right:
+    case Qt::Key_D:
     if (m_state == Playing) {
         turnRight();
     }
@@ -239,6 +262,16 @@ void PlayField::stop(void)
     }
 }
 
+void PlayField::help()
+{
+    m_step = 0;
+    if (m_state != Help) {
+        m_state = Help;
+        m_timer->stop();
+        repaint();
+    }
+}
+
 void PlayField::updateTimerMode(int timer_mode)
 {
     if (timer_mode != m_timer_mode) {
@@ -306,10 +339,6 @@ void PlayField::drawIntro(void)
     painter_pixmap.fillRect(0, 0, max_x, max_y, white);
     painter_pixmap.setPen(white);
 
-    QString copyright(tr("Original game by Bill Kendrick\n"
-                         "Zaurus port by Robert Ernst\n"
-                         "Qt and MotoMAGX port by EXL\n"
-                         "(c) 2001-2014"));
     QFont f1 = painter_pixmap.font();
     f1.setPixelSize(30);
     f1.setBold(true);
@@ -318,15 +347,55 @@ void PlayField::drawIntro(void)
     painter_pixmap.drawPixmap(0, 0, m_title);
     painter_pixmap.setFont(f1);
     painter_pixmap.setPen(black);
-    painter_pixmap.drawText(5, 5, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, tr("PDA Maze"));
+    painter_pixmap.drawText(5, 5, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_gamename);
     painter_pixmap.setPen(white);
-    painter_pixmap.drawText(0, 0, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, tr("PDA Maze"));
+    painter_pixmap.drawText(0, 0, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_gamename);
 
     painter_pixmap.fillRect(3, (max_y / 2) + 25, max_x - (3 * 2), 50, dirtywhite);
 
     painter_pixmap.setFont(f2);
     painter_pixmap.setPen(black);
-    painter_pixmap.drawText(4, (max_y / 2) + 25, max_x - (4 * 2), 50, Qt::AlignHCenter | Qt::AlignVCenter, copyright);
+    painter_pixmap.drawText(4, (max_y / 2) + 25, max_x - (4 * 2), 50,
+                            Qt::AlignHCenter | Qt::AlignVCenter,
+                            m_rt_str_copyright);
+
+    //painter_pixmap.flush();
+    painter_widget.drawPixmap(0, 0, *m_pixmap);
+}
+
+void PlayField::drawHelp(void)
+{
+    QPainter painter_pixmap(m_pixmap);
+    QPainter painter_widget(this);
+    QColor black(0, 0, 0);
+    QColor white(255, 255, 255);
+    QColor dirtywhite(250, 240, 190);
+
+    int max_x = width();
+    int max_y = height();
+
+    painter_pixmap.fillRect(0, 0, max_x, max_y, white);
+    painter_pixmap.setPen(white);
+
+    QFont f1 = painter_pixmap.font();
+    f1.setPixelSize(30);
+    f1.setBold(true);
+    QFont f2 = painter_pixmap.font();
+    f2.setPixelSize(10);
+    painter_pixmap.drawPixmap(0, 0, m_title);
+    painter_pixmap.setFont(f1);
+    painter_pixmap.setPen(black);
+    painter_pixmap.drawText(5, 5, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_kktitle);
+    painter_pixmap.setPen(white);
+    painter_pixmap.drawText(0, 0, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_kktitle);
+
+    painter_pixmap.fillRect(3, (max_y / 2) + 25, max_x - (3 * 2), 50, dirtywhite);
+
+    painter_pixmap.setFont(f2);
+    painter_pixmap.setPen(black);
+    painter_pixmap.drawText(5, (max_y / 2) + 25, max_x - (4 * 2), 50,
+                            Qt::AlignLeft,
+                            m_rt_str_kkbody);
 
     //painter_pixmap.flush();
     painter_widget.drawPixmap(0, 0, *m_pixmap);
@@ -752,13 +821,13 @@ void PlayField::drawTime(QPainter &painter)
 void PlayField::drawSteps(QPainter &painter)
 {
     if (m_bool_step) {
-        int w = painter.fontMetrics().width(m_step_str.arg(m_step));
+        int w = painter.fontMetrics().width(m_rt_str_step.arg(m_step));
         int h = painter.fontMetrics().height();
 
         painter.fillRect(100, 2, w, h, QColor(242, 243, 244));
 
         painter.setPen(Qt::black);
-        painter.drawText(100, 2, w, h, Qt::AlignRight, m_step_str.arg(m_step));
+        painter.drawText(100, 2, w, h, Qt::AlignRight, m_rt_str_step.arg(m_step));
     }
 }
 

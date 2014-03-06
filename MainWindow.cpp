@@ -60,9 +60,9 @@ void MainWindow::createActions()
             this, SLOT(slotShowStepChange(bool)));
 
     m_actionHelp = new QAction(this);
-    m_actionHelp->setText(tr("&Help..."));
+    m_actionHelp->setText(tr("&Help"));
     m_actionHelp->setShortcut(Qt::Key_F1);
-    connect(m_actionHelp, SIGNAL(triggered()), this, SLOT(close()));
+    connect(m_actionHelp, SIGNAL(triggered()), m_playField, SLOT(help()));
 
     m_actionAbout = new QAction(this);
     m_actionAbout->setText(tr("&About"));
@@ -279,7 +279,13 @@ void MainWindow::slotShowStepChange(bool step)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+#ifdef _DEBUG
+    qDebug() << "Writing config...";
+#endif
     m_ini_PDA_Maze->writeIniConfig();
+#ifdef _DEBUG
+    qDebug() << "Quiting...";
+#endif
     event->accept();
 }
 

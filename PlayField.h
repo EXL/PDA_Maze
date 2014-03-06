@@ -32,6 +32,7 @@ class PlayField : public QWidget
 
 public:
     PlayField(QWidget *parent = 0/*, const char *name = 0, WFlags f = 0*/);
+    void retranslateUi();
     ~PlayField();
 
 public:
@@ -54,7 +55,12 @@ private:
     static const int max_size = 49;
 
 private:
-    QString m_step_str;
+    QString m_rt_str_step;
+    QString m_rt_str_copyright;
+    QString m_rt_str_gamename;
+    QString m_rt_str_kktitle;
+    QString m_rt_str_kkbody;
+
     size_t m_step;
     bool m_bool_step;
 
@@ -67,6 +73,7 @@ private:
     ViewMap,
     GameOverWin,
     GameOverLoose,
+        Help
     } m_state;
     int m_xpos;
     int m_ypos;
@@ -123,6 +130,7 @@ public slots:
     void timerTick(void);
     void start(void);
     void stop(void);
+    void help(void);
 
 protected:
     void paintEvent(QPaintEvent */*event*/);
@@ -132,6 +140,7 @@ protected:
 
 private:
     void drawIntro(void);
+    void drawHelp(void);
     void drawPlaying(void);
     void drawViewMap(void);
     void drawGameOverWin(void);

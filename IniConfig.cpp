@@ -58,9 +58,10 @@ bool IniConfig::readIniConfig()
 
 void IniConfig::loadDefaultSettings()
 {
-    v_cfg_timer_mode = 0;   // Timer Up
-    v_cfg_map_mode = 1;     // Build Map Mode
-    v_cfg_map_size = 29;    // 29x29 Size
+    v_cfg_timer_mode = 0;       // Timer Up
+    v_cfg_map_mode = 1;         // Build Map Mode
+    v_cfg_map_size = 29;        // 29x29 Size
+    v_cfg_step_show = false;    // StepShow false
 }
 
 bool IniConfig::writeIniConfig()
