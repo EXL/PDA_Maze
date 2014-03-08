@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(m_playField);
 
     detFixedSize(m_ini_PDA_Maze->getV_cfg_scale_screen());
+    setWindowIcon(QIcon("://icons/PDA_maze_64x64.png"));
 }
 
 void MainWindow::createActions()
@@ -339,7 +340,7 @@ void MainWindow::detFixedSize(int scale)
     {
         setWindowTitle(tr("Maze"));
         m_playField->setFixedSize(160, 177);
-        setFixedSize(160, 177 + m); //adjustSize() isn't working correctly
+        setFixedSize(160, 177 + m); // adjustSize() isn't working correctly
         break;
     }
     }

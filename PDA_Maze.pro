@@ -25,7 +25,12 @@ HEADERS  += \
     IniConfig.h \
     PlayField.h
 
-OTHER_FILES +=
+OTHER_FILES += README.md
 
-RESOURCES += \
-    PDA_Maze.qrc
+RESOURCES += PDA_Maze.qrc
+
+# Windows Executable Icon
+win32 {
+    RC_FILE = PDA_Maze.rc
+    OTHER_FILES += PDA_Maze.rc
+}

@@ -100,11 +100,11 @@ void PlayField::retranslateUi()
     m_rt_str_step = tr("Step: %1");
     m_rt_str_copyright = tr("Original game by Bill Kendrick\n"
                             "Zaurus port by Robert Ernst\n"
-                            "Qt and MotoMAGX port by EXL\n"
+                            "Qt port by EXL\n"
                             "(c) 2001-2014");
-    m_rt_str_gamename = tr("PDA Maze");
+    m_rt_str_gamename = tr("PDA\nMaze");
     m_rt_str_kktitle = tr("Control\nKeys");
-    m_rt_str_kkbody = tr("Movement: D-pad or W, A, S, D\n"
+    m_rt_str_kkbody = tr("Move: D-pad or W, A, S, D\n"
                          "Show Map: Space or Enter\n"
                          "New Game: F5\n"
                          "Exit: Esc and F10");
@@ -534,7 +534,7 @@ void PlayField::drawAllOnWidget(QPainter &painter)
     {
         painter.drawPixmap(0, 0,
                            m_pixmap->scaled(240, 265,
-                                            Qt::KeepAspectRatio,
+                                            Qt::IgnoreAspectRatio, // Qt::KeepAspectRatio
                                             (m_scr_smooth) ?
                                                 Qt::SmoothTransformation:
                                                 Qt::FastTransformation));
@@ -544,7 +544,7 @@ void PlayField::drawAllOnWidget(QPainter &painter)
     {
         painter.drawPixmap(0, 0,
                            m_pixmap->scaled(480, 531,
-                                            Qt::KeepAspectRatio,
+                                            Qt::IgnoreAspectRatio, // Qt::KeepAspectRatio
                                             (m_scr_smooth) ?
                                                 Qt::SmoothTransformation:
                                                 Qt::FastTransformation));

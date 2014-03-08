@@ -31,5 +31,6 @@
         <file>images/timeup.xpm</file>
         <file>images/youwin.xpm</file>
         <file>images/title.png</file>
+        <file>icons/PDA_maze_64x64.png</file>
     </qresource>
 </RCC>
