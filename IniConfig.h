@@ -16,6 +16,7 @@ class IniConfig : public QObject
     bool v_cfg_step_show;
     int v_cfg_scale_screen;
     bool v_cfg_smoothing_screen;
+    QString v_cfg_app_language;
 
     void loadDefaultSettings();
 public slots:
@@ -24,6 +25,7 @@ public slots:
     void setV_cfg_map_size(int value);
 public:
     explicit IniConfig(QObject *parent = 0);
+
     bool readIniConfig();
     bool writeIniConfig();
 
@@ -31,13 +33,16 @@ public:
     int getV_cfg_map_mode() const;
     int getV_cfg_map_size() const;
 
-    ~IniConfig();
     bool getV_cfg_step_show() const;
     void setV_cfg_step_show(bool value);
     int getV_cfg_scale_screen() const;
     void setV_cfg_scale_screen(int value);
     bool getV_cfg_screen_smoothing() const;
     void setV_cfg_screen_smoothing(bool value);
+    QString getV_cfg_app_language() const;
+    void setV_cfg_app_language(const QString &value);
+
+    ~IniConfig();
 };
 
 #endif // INICONFIG_H

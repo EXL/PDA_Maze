@@ -41,8 +41,8 @@ bool IniConfig::readIniConfig()
         v_cfg_step_show = m_cfg_PDA_Maze->value("ShowStep").toBool();
         v_cfg_scale_screen = m_cfg_PDA_Maze->value("ScaleScreen").toInt();
         v_cfg_smoothing_screen = m_cfg_PDA_Maze->value("SmoothScreen").toBool();
+        v_cfg_app_language = m_cfg_PDA_Maze->value("AppLanguage").toString();
         m_cfg_PDA_Maze->endGroup();
-
 #ifdef _DEBUG
         qDebug() << "[IniConfig.cpp::IniConfig::readIniConfig()]"
                  << "\n=== DEBUG ==="
@@ -52,10 +52,9 @@ bool IniConfig::readIniConfig()
                  << "\nv_cfg_step_show =" << v_cfg_step_show
                  << "\nv_cfg_scale_screen =" << v_cfg_scale_screen
                  << "\nv_cfg_smoothing_screen =" << v_cfg_smoothing_screen
+                 << "\nv_cfg_app_language =" << v_cfg_app_language
                  << "\n=== END DEBUG ===";
 #endif
-
-
         return true;
     }
 }
@@ -68,6 +67,7 @@ void IniConfig::loadDefaultSettings()
     v_cfg_step_show = false;        // StepShow false
     v_cfg_scale_screen = 0;         // Don't scale screen
     v_cfg_smoothing_screen = false; // Don't smooth screen
+    v_cfg_app_language = "en";      // English Language
 }
 
 bool IniConfig::writeIniConfig()
@@ -94,6 +94,7 @@ bool IniConfig::writeIniConfig()
         m_cfg_PDA_Maze->setValue("ShowStep", v_cfg_step_show);
         m_cfg_PDA_Maze->setValue("ScaleScreen", v_cfg_scale_screen);
         m_cfg_PDA_Maze->setValue("SmoothScreen", v_cfg_smoothing_screen);
+        m_cfg_PDA_Maze->setValue("AppLanguage", v_cfg_app_language);
         m_cfg_PDA_Maze->endGroup();
         return true;
     }
@@ -159,6 +160,16 @@ bool IniConfig::getV_cfg_screen_smoothing() const
 void IniConfig::setV_cfg_screen_smoothing(bool value)
 {
     v_cfg_smoothing_screen = value;
+}
+
+QString IniConfig::getV_cfg_app_language() const
+{
+    return v_cfg_app_language;
+}
+
+void IniConfig::setV_cfg_app_language(const QString &value)
+{
+    v_cfg_app_language = value;
 }
 
 IniConfig::~IniConfig()
