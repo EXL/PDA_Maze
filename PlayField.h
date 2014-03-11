@@ -31,7 +31,7 @@ class PlayField : public QWidget
     Q_OBJECT
 
 public:
-    PlayField(QWidget *parent = 0/*, const char *name = 0, WFlags f = 0*/);
+    PlayField(QWidget *parent = 0);
     void retranslateUi();
     ~PlayField();
 
@@ -60,6 +60,7 @@ private:
     QString m_rt_str_gamename;
     QString m_rt_str_kktitle;
     QString m_rt_str_kkbody;
+    QString m_lang;
 
     size_t m_step;
     bool m_bool_step;
@@ -132,6 +133,7 @@ public slots:
     void updateStepStatus(bool qStep);
     void updateScreenScale(int scale);
     void updateSmoothStatus(bool smooth);
+    void updateLang(QString lang);
     void timerTick(void);
     void start(void);
     void stop(void);

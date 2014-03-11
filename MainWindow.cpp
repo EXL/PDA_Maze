@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_playField->updateStepStatus(m_ini_PDA_Maze->getV_cfg_step_show());
     m_playField->updateScreenScale(m_scale);
     m_playField->updateSmoothStatus(m_ini_PDA_Maze->getV_cfg_screen_smoothing());
+    m_playField->updateLang(m_ini_PDA_Maze->getV_cfg_app_language());
 
     createActions();
     m_actionStep->setChecked(m_ini_PDA_Maze->getV_cfg_step_show());
@@ -354,6 +355,12 @@ void MainWindow::retranslateUi()
             setWindowTitle(tr("Maze"));
         }
     }
+
+#ifdef _DEBUG
+    qDebug() << "Retranslate MainWindow, Lang: " << m_ini_PDA_Maze->getV_cfg_app_language();
+#endif
+
+    m_playField->retranslateUi();
 }
 
 void MainWindow::slotTimerModeChange(QAction *action)
@@ -439,6 +446,8 @@ void MainWindow::slotSwitchLanguage(QAction *action)
     QString qmPath = qmDir.absolutePath();
 
     appTranslator.load("PDA_Maze_" + locale, qmPath);
+
+    m_playField->updateLang(locale);
 
     retranslateUi();
 }

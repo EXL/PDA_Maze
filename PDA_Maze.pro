@@ -35,6 +35,4 @@ TRANSLATIONS += i18n/PDA_Maze_en.ts \
     i18n/PDA_Maze_es.ts
 
 # Windows Executable Icon
-win32 {
-    RC_FILE = PDA_Maze.rc
-}
+win32:RC_FILE = PDA_Maze.rc

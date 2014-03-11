@@ -22,7 +22,7 @@
 #include <QFontMetrics>
 
 PlayField::PlayField(QWidget *parent) :
-    QWidget(parent/*, name, f*/)
+    QWidget(parent)
 {
     /* Setup the default values for some member variables */
     m_timer_mode = TimerUp;
@@ -66,11 +66,6 @@ PlayField::PlayField(QWidget *parent) :
     m_close_right.load("://images/close_right.xpm");
     m_close_right_bright.load("://images/close_right_bright.xpm");
 
-    m_cmp_east.load("://images/cmp_east.png");
-    m_cmp_north.load("://images/cmp_north.png");
-    m_cmp_south.load("://images/cmp_south.png");
-    m_cmp_west.load("://images/cmp_west.png");
-
     m_far_center.load("://images/far_center.xpm");
     m_far_center_bright.load("://images/far_center_bright.xpm");
     m_far_left.load("://images/far_left.xpm");
@@ -88,11 +83,7 @@ PlayField::PlayField(QWidget *parent) :
     m_middle_right_bright.load("://images/middle_right_bright.xpm");
 
     m_numbers.load("://images/numbers.xpm");
-    m_timeup.load("://images/timeup.xpm");
     m_title.load("://images/title.png");
-    m_youwin.load("://images/youwin.xpm");
-
-    retranslateUi();
 }
 
 void PlayField::retranslateUi()
@@ -108,6 +99,20 @@ void PlayField::retranslateUi()
                          "Show Map: Space or Enter\n"
                          "New Game: F5\n"
                          "Exit: Esc and F10");
+
+    m_cmp_east.load(QString("://images/images_i18n/cmp_east_%1.png").arg(m_lang));
+    m_cmp_north.load(QString("://images/images_i18n/cmp_north_%1.png").arg(m_lang));
+    m_cmp_south.load(QString("://images/images_i18n/cmp_south_%1.png").arg(m_lang));
+    m_cmp_west.load(QString("://images/images_i18n/cmp_west_%1.png").arg(m_lang));
+
+    m_timeup.load(QString("://images/images_i18n/timeup_%1.png").arg(m_lang));
+    m_youwin.load(QString("://images/images_i18n/youwin_%1.png").arg(m_lang));
+
+#ifdef _DEBUG
+    qDebug() << "Retranslate PlayerField, Lang: " << m_lang;
+#endif
+
+    repaint();
 }
 
 void PlayField::paintEvent(QPaintEvent */*event*/)
@@ -343,6 +348,11 @@ void PlayField::updateSmoothStatus(bool smooth)
         m_scr_smooth = smooth;
     }
     repaint();
+}
+
+void PlayField::updateLang(QString lang)
+{
+    m_lang = lang;
 }
 
 void PlayField::drawIntro(void)

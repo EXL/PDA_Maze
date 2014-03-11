@@ -10,10 +10,6 @@
         <file>images/close_left.xpm</file>
         <file>images/close_right_bright.xpm</file>
         <file>images/close_right.xpm</file>
-        <file>images/cmp_east.png</file>
-        <file>images/cmp_north.png</file>
-        <file>images/cmp_south.png</file>
-        <file>images/cmp_west.png</file>
         <file>images/far_center_bright.xpm</file>
         <file>images/far_center.xpm</file>
         <file>images/far_left_bright.xpm</file>
@@ -28,8 +24,6 @@
         <file>images/middle_right_bright.xpm</file>
         <file>images/middle_right.xpm</file>
         <file>images/numbers.xpm</file>
-        <file>images/timeup.xpm</file>
-        <file>images/youwin.xpm</file>
         <file>images/title.png</file>
         <file>icons/PDA_maze_64x64.png</file>
         <file>i18n/PDA_Maze_en.qm</file>
@@ -41,5 +35,23 @@
         <file>icons/en.png</file>
         <file>icons/es.png</file>
         <file>icons/ru.png</file>
+        <file>images/images_i18n/cmp_east_en.png</file>
+        <file>images/images_i18n/cmp_east_es.png</file>
+        <file>images/images_i18n/cmp_east_ru.png</file>
+        <file>images/images_i18n/cmp_north_en.png</file>
+        <file>images/images_i18n/cmp_north_es.png</file>
+        <file>images/images_i18n/cmp_north_ru.png</file>
+        <file>images/images_i18n/cmp_south_en.png</file>
+        <file>images/images_i18n/cmp_south_es.png</file>
+        <file>images/images_i18n/cmp_south_ru.png</file>
+        <file>images/images_i18n/cmp_west_en.png</file>
+        <file>images/images_i18n/cmp_west_es.png</file>
+        <file>images/images_i18n/cmp_west_ru.png</file>
+        <file>images/images_i18n/timeup_en.png</file>
+        <file>images/images_i18n/timeup_es.png</file>
+        <file>images/images_i18n/timeup_ru.png</file>
+        <file>images/images_i18n/youwin_en.png</file>
+        <file>images/images_i18n/youwin_es.png</file>
+        <file>images/images_i18n/youwin_ru.png</file>
     </qresource>
 </RCC>
