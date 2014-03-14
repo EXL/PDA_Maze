@@ -1,13 +1,14 @@
-#include "MainWindow.h"
+#include "CMainWindow.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    Q_INIT_RESOURCE(PDA_Maze);
+    QApplication m_app(argc, argv);
 
-    MainWindow mainWindow;
-    mainWindow.show();
+    CMainWindow m_MainWindow;
+    m_MainWindow.show();
 
-    return app.exec();
+    return m_app.exec();
 }

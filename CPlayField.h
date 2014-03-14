@@ -14,8 +14,8 @@
  *
  */
 
-#ifndef __PLAYFIELD_HEADER__
-#define __PLAYFIELD_HEADER__
+#ifndef CPLAYFIELD_H
+#define CPLAYFIELD_H
 
 #include <QPixmap>
 #include <QPainter>
@@ -26,14 +26,14 @@
 #include <QDebug>
 #endif
 
-class PlayField : public QWidget
+class CPlayField : public QWidget
 {
     Q_OBJECT
 
 public:
-    PlayField(QWidget *parent = 0);
+    CPlayField(QWidget *parent = 0);
     void retranslateUi();
-    ~PlayField();
+    ~CPlayField();
 
 public:
     enum TimerModes {
@@ -175,4 +175,4 @@ private:
     void drawCloseRight(QPainter &painter);
 };
 
-#endif // __PLAYFIELD_HEADER__
+#endif // CPLAYFIELD_H

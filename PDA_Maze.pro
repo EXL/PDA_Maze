@@ -11,19 +11,15 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = PDA_Maze
 TEMPLATE = app
 
-# For Debug
-QMAKE_CFLAGS_DEBUG += -D_DEBUG
-QMAKE_CXXFLAGS_DEBUG += -D_DEBUG
-
 SOURCES += main.cpp \
-    MainWindow.cpp \
-    IniConfig.cpp \
-    PlayField.cpp
+    CMainWindow.cpp \
+    CIniConfig.cpp \
+    CPlayField.cpp
 
 HEADERS  += \
-    MainWindow.h \
-    IniConfig.h \
-    PlayField.h
+    CMainWindow.h \
+    CIniConfig.h \
+    CPlayField.h
 
 OTHER_FILES += README.md \
     PDA_Maze.rc

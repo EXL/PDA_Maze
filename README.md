@@ -25,6 +25,6 @@ Linux Mint 15 KDE 64-bit:
 
 ![Linux Mint 15 KDE 64-bit](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_KDE_Mint.png)
 
-Embedded:
+Linux Embedded ARM Arch:
 
 ![Linux Embedded ARM Arch](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Embedded_Linux.png)

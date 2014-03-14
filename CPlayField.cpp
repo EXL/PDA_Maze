@@ -14,14 +14,14 @@
  *
  */
 
-#include "PlayField.h"
+#include "CPlayField.h"
 
 #include <QApplication>
 #include <QResizeEvent>
 #include <QFont>
 #include <QFontMetrics>
 
-PlayField::PlayField(QWidget *parent) :
+CPlayField::CPlayField(QWidget *parent) :
     QWidget(parent)
 {
     /* Setup the default values for some member variables */
@@ -86,7 +86,7 @@ PlayField::PlayField(QWidget *parent) :
     m_title.load("://images/title.png");
 }
 
-void PlayField::retranslateUi()
+void CPlayField::retranslateUi()
 {
     m_rt_str_step = tr("Step: %1");
     m_rt_str_copyright = tr("Original game by Bill Kendrick\n"
@@ -115,7 +115,7 @@ void PlayField::retranslateUi()
     repaint();
 }
 
-void PlayField::paintEvent(QPaintEvent */*event*/)
+void CPlayField::paintEvent(QPaintEvent */*event*/)
 {
     switch (m_state) {
     case Intro:
@@ -139,13 +139,13 @@ void PlayField::paintEvent(QPaintEvent */*event*/)
     }
 }
 
-void PlayField::showEvent(QShowEvent *event)
+void CPlayField::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
     setFocusPolicy(Qt::StrongFocus);
 }
 
-void PlayField::keyPressEvent(QKeyEvent *event)
+void CPlayField::keyPressEvent(QKeyEvent *event)
 {
     QWidget::keyPressEvent(event);
     switch (event->key()) {
@@ -194,7 +194,7 @@ void PlayField::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void PlayField::mousePressEvent(QMouseEvent *event)
+void CPlayField::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
 
@@ -232,7 +232,7 @@ void PlayField::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void PlayField::timerTick(void)
+void CPlayField::timerTick(void)
 {
     if (m_timer_mode == TimerDown) {
     if (m_counter > 0) {
@@ -248,7 +248,7 @@ void PlayField::timerTick(void)
     repaint();
 }
 
-void PlayField::start(void)
+void CPlayField::start(void)
 {
     m_state = Playing;
     m_timer->start(1000/*, false*/);
@@ -258,7 +258,7 @@ void PlayField::start(void)
     repaint();
 }
 
-void PlayField::stop(void)
+void CPlayField::stop(void)
 {
     m_step = 0;
     if (m_state != Intro) {
@@ -268,7 +268,7 @@ void PlayField::stop(void)
     }
 }
 
-void PlayField::help()
+void CPlayField::help()
 {
     m_step = 0;
     if (m_state != Help) {
@@ -278,7 +278,7 @@ void PlayField::help()
     }
 }
 
-void PlayField::updateTimerMode(int timer_mode)
+void CPlayField::updateTimerMode(int timer_mode)
 {
     if (timer_mode != m_timer_mode) {
     switch (timer_mode) {
@@ -295,7 +295,7 @@ void PlayField::updateTimerMode(int timer_mode)
     }
 }
 
-void PlayField::updateMapMode(int map_mode)
+void CPlayField::updateMapMode(int map_mode)
 {
     if (map_mode != m_map_mode) {
     switch (map_mode) {
@@ -315,7 +315,7 @@ void PlayField::updateMapMode(int map_mode)
     }
 }
 
-void PlayField::updateSize(int size)
+void CPlayField::updateSize(int size)
 {
     if (size != m_size) {
     m_size = size;
@@ -325,13 +325,13 @@ void PlayField::updateSize(int size)
     }
 }
 
-void PlayField::updateStepStatus(bool qStep)
+void CPlayField::updateStepStatus(bool qStep)
 {
     m_bool_step = qStep;
     repaint();
 }
 
-void PlayField::updateScreenScale(int scale)
+void CPlayField::updateScreenScale(int scale)
 {
     if (!scale) {
         m_scr_smooth = false;
@@ -340,7 +340,7 @@ void PlayField::updateScreenScale(int scale)
     repaint();
 }
 
-void PlayField::updateSmoothStatus(bool smooth)
+void CPlayField::updateSmoothStatus(bool smooth)
 {
     if (!m_scr_scale) {
         m_scr_smooth = false;
@@ -350,12 +350,12 @@ void PlayField::updateSmoothStatus(bool smooth)
     repaint();
 }
 
-void PlayField::updateLang(QString lang)
+void CPlayField::updateLang(QString lang)
 {
     m_lang = lang;
 }
 
-void PlayField::drawIntro(void)
+void CPlayField::drawIntro(void)
 {
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
@@ -391,7 +391,7 @@ void PlayField::drawIntro(void)
     drawAllOnWidget(painter_widget);
 }
 
-void PlayField::drawHelp(void)
+void CPlayField::drawHelp(void)
 {
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
@@ -427,7 +427,7 @@ void PlayField::drawHelp(void)
     drawAllOnWidget(painter_widget);
 }
 
-void PlayField::drawPlaying(void)
+void CPlayField::drawPlaying(void)
 {
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
@@ -446,7 +446,7 @@ void PlayField::drawPlaying(void)
     drawAllOnWidget(painter_widget);
 }
 
-void PlayField::drawViewMap(void)
+void CPlayField::drawViewMap(void)
 {
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
@@ -487,7 +487,7 @@ void PlayField::drawViewMap(void)
     drawAllOnWidget(painter_widget);
 }
 
-void PlayField::drawGameOverWin(void)
+void CPlayField::drawGameOverWin(void)
 {
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
@@ -509,7 +509,7 @@ void PlayField::drawGameOverWin(void)
     drawAllOnWidget(painter_widget);
 }
 
-void PlayField::drawGameOverLoose(void)
+void CPlayField::drawGameOverLoose(void)
 {
     QPainter painter_pixmap(m_pixmap);
     QPainter painter_widget(this);
@@ -531,7 +531,7 @@ void PlayField::drawGameOverLoose(void)
     drawAllOnWidget(painter_widget);
 }
 
-void PlayField::drawAllOnWidget(QPainter &painter)
+void CPlayField::drawAllOnWidget(QPainter &painter)
 {
     switch (m_scr_scale) {
     case 0:
@@ -563,7 +563,7 @@ void PlayField::drawAllOnWidget(QPainter &painter)
     }
 }
 
-void PlayField::moveForward(void)
+void CPlayField::moveForward(void)
 {
     int xpos = m_xpos + xpos_inc[m_dir];
     int ypos = m_ypos + ypos_inc[m_dir];
@@ -589,7 +589,7 @@ void PlayField::moveForward(void)
     }
 }
 
-void PlayField::moveBackward(void)
+void CPlayField::moveBackward(void)
 {
     int xpos = m_xpos - xpos_inc[m_dir];
     int ypos = m_ypos - ypos_inc[m_dir];
@@ -614,7 +614,7 @@ void PlayField::moveBackward(void)
     }
 }
 
-void PlayField::turnLeft(void)
+void CPlayField::turnLeft(void)
 {
     switch (m_dir) {
     case North:
@@ -633,7 +633,7 @@ void PlayField::turnLeft(void)
     repaint();
 }
 
-void PlayField::turnRight(void)
+void CPlayField::turnRight(void)
 {
     switch (m_dir) {
     case North:
@@ -652,14 +652,14 @@ void PlayField::turnRight(void)
     repaint();
 }
 
-int PlayField::mazeChunk(int xpos, int ypos)
+int CPlayField::mazeChunk(int xpos, int ypos)
 {
     /* This is the function mazechunk() from Bill Kendricks pdamaze.c */
     return (xpos > 0 && ypos > 0 && xpos < (m_size - 1) && ypos < (m_size - 1))
     ? m_maze[ypos][xpos] : -1;
 }
 
-void PlayField::makeMaze(void)
+void CPlayField::makeMaze(void)
 {
     /* This is the function create_maze() from Bill Kendricks pdamaze.c */
     int x;
@@ -763,7 +763,7 @@ void PlayField::makeMaze(void)
     } while (m_maze[m_ypos + ypos_inc[m_dir]][m_xpos + xpos_inc[m_dir]] == 255);
 }
 
-void PlayField::drawMazeView(QPainter &painter)
+void CPlayField::drawMazeView(QPainter &painter)
 {
     switch (m_dir) {
     case North:
@@ -829,7 +829,7 @@ void PlayField::drawMazeView(QPainter &painter)
     }
 }
 
-void PlayField::drawCompass(QPainter &painter)
+void CPlayField::drawCompass(QPainter &painter)
 {
     int max_x = 160;
 
@@ -849,7 +849,7 @@ void PlayField::drawCompass(QPainter &painter)
     }
 }
 
-void PlayField::drawTime(QPainter &painter)
+void CPlayField::drawTime(QPainter &painter)
 {
     int max_x = 160;
 
@@ -871,7 +871,7 @@ void PlayField::drawTime(QPainter &painter)
     }
 }
 
-void PlayField::drawSteps(QPainter &painter)
+void CPlayField::drawSteps(QPainter &painter)
 {
     if (m_bool_step) {
         int w = painter.fontMetrics().width(m_rt_str_step.arg(m_step));
@@ -884,7 +884,7 @@ void PlayField::drawSteps(QPainter &painter)
     }
 }
 
-void PlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffset)
+void CPlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffset)
 {
     if (block == 255) {
     if (dist == DistFar) {
@@ -919,13 +919,13 @@ void PlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffs
     }
 }
 
-void PlayField::drawFarCenter(QPainter &painter, int xx)
+void CPlayField::drawFarCenter(QPainter &painter, int xx)
 {
     painter.drawPixmap(xx, 80 - 12 + 1,
     (m_dir == North || m_dir == West) ? m_far_center_bright : m_far_center);
 }
 
-void PlayField::drawFarLeft(QPainter &painter, int xx)
+void CPlayField::drawFarLeft(QPainter &painter, int xx)
 {
     QPixmap pix;
     int y;
@@ -941,7 +941,7 @@ void PlayField::drawFarLeft(QPainter &painter, int xx)
     painter.drawPixmap(xx, 80 - 12 + 11, pix, 0, 11, 12, 3); // 16.5 -> 16
 }
 
-void PlayField::drawFarRight(QPainter &painter, int xx)
+void CPlayField::drawFarRight(QPainter &painter, int xx)
 {
     QPixmap pix;
     int y;
@@ -954,13 +954,13 @@ void PlayField::drawFarRight(QPainter &painter, int xx)
     painter.drawPixmap(xx, 80 - 12 + 11, pix, 0, 11, 12, 4); // 16.5 -> 16
 }
 
-void PlayField::drawMidCenter(QPainter &painter, int xx)
+void CPlayField::drawMidCenter(QPainter &painter, int xx)
 {
     painter.drawPixmap(xx, 80 - 33 + 1,
     (m_dir == North || m_dir == West) ? m_middle_center_bright : m_middle_center); // 49 -> 49.5
 }
 
-void PlayField::drawMidLeft(QPainter &painter, int xx)
+void CPlayField::drawMidLeft(QPainter &painter, int xx)
 {
     QPixmap pix;
     int y;
@@ -976,7 +976,7 @@ void PlayField::drawMidLeft(QPainter &painter, int xx)
     painter.drawPixmap(xx, 80 - 33 + 22, pix, 0, 23, 24, 23); // 49 -> 49.5, 37 -> 37.5
 }
 
-void PlayField::drawMidRight(QPainter &painter, int xx)
+void CPlayField::drawMidRight(QPainter &painter, int xx)
 {
     QPixmap pix;
     int y;
@@ -989,13 +989,13 @@ void PlayField::drawMidRight(QPainter &painter, int xx)
     painter.drawPixmap(xx, 80 - 33 + 22, pix, 0, 22, 24, 24); // 33 -> 33.5, 37 -> 37.5
 }
 
-void PlayField::drawCloseCenter(QPainter &painter)
+void CPlayField::drawCloseCenter(QPainter &painter)
 {
     painter.drawPixmap(0, 0,
     (m_dir == North || m_dir == West) ? m_close_center_bright : m_close_center);
 }
 
-void PlayField::drawCloseLeft(QPainter &painter)
+void CPlayField::drawCloseLeft(QPainter &painter)
 {
     QPixmap pix;
     int y;
@@ -1011,7 +1011,7 @@ void PlayField::drawCloseLeft(QPainter &painter)
     painter.drawPixmap(0, 51, pix, 0, 51, 50, 60); // 76 -> 76.5
 }
 
-void PlayField::drawCloseRight(QPainter &painter)
+void CPlayField::drawCloseRight(QPainter &painter)
 {
     QPixmap pix;
     int y;
@@ -1024,7 +1024,7 @@ void PlayField::drawCloseRight(QPainter &painter)
     painter.drawPixmap(110, 51, pix, 0, 51, 50, 60); // 76 -> 76.5
 }
 
-PlayField::~PlayField()
+CPlayField::~CPlayField()
 {
     delete m_pixmap;
     delete m_timer;
