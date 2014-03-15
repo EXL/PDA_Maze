@@ -1,3 +1,71 @@
+/*
+ * CMainWindow - modern Qt GUI class for PDA Maze game.
+ *
+ * Struction of menu:
+ *     |
+ *     +-Game
+ *     |    |
+ *     |    +-New Game <F5>
+ *     |    |
+ *     |    +-Quit <F10>
+ *     |
+ *     +-Settings
+ *     |    |
+ *     |    +-Timer
+ *     |    |   |
+ *     |    |   +-Timer Up
+ *     |    |   |
+ *     |    |   +-Timer Down
+ *     |    |
+ *     |    +-Map
+ *     |    |   |
+ *     |    |   +-All
+ *     |    |   |
+ *     |    |   +-Build
+ *     |    |   |
+ *     |    |   +-None
+ *     |    |
+ *     |    +-Size of map
+ *     |    |   |
+ *     |    |   +-9x9
+ *     |    |   |
+ *     |    |   +-19x19
+ *     |    |   |
+ *     |    |   +-29x29
+ *     |    |   |
+ *     |    |   +-39x39
+ *     |    |   |
+ *     |    |   +-49x49
+ *     |    |
+ *     |    +-Step Counter
+ *     |    |
+ *     |    +-Screen Size
+ *     |    |   |
+ *     |    |   +-160x177
+ *     |    |   |
+ *     |    |   +-240x265
+ *     |    |   |
+ *     |    |   +-480x531
+ *     |    |
+ *     |    +-Language
+ *     |        |
+ *     |        +-English
+ *     |        |
+ *     |        +-Spanish
+ *     |        |
+ *     |        +-Russian
+ *     |
+ *     +-Help
+ *          |
+ *          +-Control Keys <F1>
+ *          |
+ *          +-About PDA Maze
+ *          |
+ *          +-About Qt...
+ *
+ * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
+*/
+
 #ifndef CMAINWINDOW_H
 #define CMAINWINDOW_H
 
@@ -22,7 +90,7 @@ private:
     CIniConfig *m_IniConfig;
     CPlayField *m_PlayField;
 
-    QTranslator appTranslator;
+    QTranslator m_AppTranslator;
 
     QAction *m_actionNewGame;
     QAction *m_actionQuit;
@@ -54,16 +122,16 @@ private:
     QMenu *m_menupScaleScreen;
 
 private:
-    void createActions();
-    void createMenus();
-    QMenu *createTimerMenu();
-    QMenu *createMapModeMenu();
-    QMenu *createMapSizeMenu();
-    QMenu *createScaleScreenMenu();
-    QMenu *createLanguageMenu();
-    void disableSmoothScreen();
-    void loadTranslations();
-    void retranslateUi();
+    void createActions(void);
+    void createMenus(void);
+    QMenu *createTimerMenu(void);
+    QMenu *createMapModeMenu(void);
+    QMenu *createMapSizeMenu(void);
+    QMenu *createScaleScreenMenu(void);
+    QMenu *createLanguageMenu(void);
+    void disableSmoothScreen(void);
+    void loadTranslations(void);
+    void retranslateUi(void);
     void detFixedSize(int aScreenScale);
 
 private slots:

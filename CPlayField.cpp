@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2002 Robert Ernst <robert.ernst@maxxio.com>
- * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
+ * CPlayField - the PDA Maze widget.
  *
  * This file may be distributed and/or modified under the terms of the
  * GNU General Public License version 2 as published by the Free Software
@@ -12,128 +11,138 @@
  *
  * See COPYING for GPL licensing information.
  *
+ * Copyright (C) 2001 Bill Kendrick <bill@newbreedsoftware.com>
+ * Copyright (C) 2002 Robert Ernst <robert.ernst@maxxio.com>
+ * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
  */
 
 #include "CPlayField.h"
 
 #include <QApplication>
-#include <QResizeEvent>
+#include <QDebug>
 #include <QFont>
 #include <QFontMetrics>
+#include <QResizeEvent>
 
 CPlayField::CPlayField(QWidget *parent) :
     QWidget(parent)
 {
     /* Setup the default values for some member variables */
-    m_timer_mode = TimerUp;
-    m_map_mode = MapBuild;
-    m_size = 9;
-    m_xpos = -1;
-    m_ypos = -1;
-    m_dir = North;
-    m_state = Intro;
-    m_pixmap = 0;
-    m_counter = 0;
+    e_TimerMode = CIniConfig::ETimerUp;
+    e_MapMode = CIniConfig::EMapBuild;
+    e_Direction = ENorth;
+    e_GameState = EIntro;
+    mapSize = CIniConfig::EMapSize9x9;
+    xPos = -1;
+    yPos = -1;
+    m_MainPixmap = NULL;
+    timerCounter = 0;
 
-    m_step = 0;
-    m_bool_step = false;
+    stepCounter = 0;
+    showStep = false;
 
-    m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(timerTick()));
+    m_GameTimer = new QTimer(this);
+    connect(m_GameTimer, SIGNAL(timeout()), this, SLOT(timerTick()));
 
     /* Initialize the xpos/ypos increment counter */
-    xpos_inc[North] = 0;
-    xpos_inc[East] = 1;
-    xpos_inc[South] = 0;
-    xpos_inc[West] = -1;
-    ypos_inc[North] = -1;
-    ypos_inc[East] = 0;
-    ypos_inc[South] = 1;
-    ypos_inc[West] = 0;
+    xPosInc[ENorth] = 0;
+    xPosInc[EEast] = 1;
+    xPosInc[ESouth] = 0;
+    xPosInc[EWest] = -1;
+    yPosInc[ENorth] = -1;
+    yPosInc[EEast] = 0;
+    yPosInc[ESouth] = 1;
+    yPosInc[EWest] = 0;
 
-    m_pixmap = new QPixmap(160, 177);
+    m_MainPixmap = new QPixmap(160, 177);
 
-    /* Load XMP and PNG images */
-    m_bkg_east.load("://images/bkg_east.xpm");
-    m_bkg_north.load("://images/bkg_north.xpm");
-    m_bkg_south.load("://images/bkg_south.xpm");
-    m_bkg_west.load("://images/bkg_west.xpm");
+    /* Load XMP and PNG untranslatable images */
+    m_BackgroundEast.load("://images/bkg_east.xpm");
+    m_BackgroundNorth.load("://images/bkg_north.xpm");
+    m_BackgroundSouth.load("://images/bkg_south.xpm");
+    m_BackgroundWest.load("://images/bkg_west.xpm");
 
-    m_close_center.load("://images/close_center.xpm");
-    m_close_center_bright.load("://images/close_center_bright.xpm");
-    m_close_left.load("://images/close_left.xpm");
-    m_close_left_bright.load("://images/close_left_bright.xpm");
-    m_close_right.load("://images/close_right.xpm");
-    m_close_right_bright.load("://images/close_right_bright.xpm");
+    m_FarDistanceCenter.load("://images/far_center.xpm");
+    m_FarDistanceCenterBright.load("://images/far_center_bright.xpm");
+    m_FarDistanceLeft.load("://images/far_left.xpm");
+    m_FarDistanceLeftBright.load("://images/far_left_bright.xpm");
+    m_FarDistanceRight.load("://images/far_right.xpm");
+    m_FarDistanceRightBright.load("://images/far_right_bright.xpm");
 
-    m_far_center.load("://images/far_center.xpm");
-    m_far_center_bright.load("://images/far_center_bright.xpm");
-    m_far_left.load("://images/far_left.xpm");
-    m_far_left_bright.load("://images/far_left_bright.xpm");
-    m_far_right.load("://images/far_right.xpm");
-    m_far_right_bright.load("://images/far_right_bright.xpm");
+    m_MiddleDistanceCenter.load("://images/middle_center.xpm");
+    m_MiddleDistanceCenterBright.load("://images/middle_center_bright.xpm");
+    m_MiddleDistanceLeft.load("://images/middle_left.xpm");
+    m_MiddleDistanceLeftBright.load("://images/middle_left_bright.xpm");
+    m_MiddleDistanceRight.load("://images/middle_right.xpm");
+    m_MiddleDistanceRightBright.load("://images/middle_right_bright.xpm");
 
-    m_ground.load("://images/ground.xpm");
+    m_CloseDistanceCenter.load("://images/close_center.xpm");
+    m_CloseDistanceCenterBright.load("://images/close_center_bright.xpm");
+    m_CloseDistanceLeft.load("://images/close_left.xpm");
+    m_CloseDistanceLeftBright.load("://images/close_left_bright.xpm");
+    m_CloseDistanceRight.load("://images/close_right.xpm");
+    m_CloseDistanceRightBright.load("://images/close_right_bright.xpm");
 
-    m_middle_center.load("://images/middle_center.xpm");
-    m_middle_center_bright.load("://images/middle_center_bright.xpm");
-    m_middle_left.load("://images/middle_left.xpm");
-    m_middle_left_bright.load("://images/middle_left_bright.xpm");
-    m_middle_right.load("://images/middle_right.xpm");
-    m_middle_right_bright.load("://images/middle_right_bright.xpm");
+    m_Ground.load("://images/ground.xpm");
 
-    m_numbers.load("://images/numbers.xpm");
-    m_title.load("://images/title.png");
+    m_TimerNumbers.load("://images/numbers.xpm");
+    m_PicGameTitle.load("://images/title.png");
 }
 
-void CPlayField::retranslateUi()
+void CPlayField::retranslateUi(void)
 {
-    m_rt_str_step = tr("Step: %1");
-    m_rt_str_copyright = tr("Original game by Bill Kendrick\n"
-                            "Zaurus port by Robert Ernst\n"
-                            "Qt port by EXL\n"
-                            "(c) 2001-2014");
-    m_rt_str_gamename = tr("PDA\nMaze");
-    m_rt_str_kktitle = tr("Control\nKeys");
-    m_rt_str_kkbody = tr("Move: D-pad or W, A, S, D\n"
-                         "Show Map: Space or Enter\n"
-                         "New Game: F5\n"
-                         "Exit: Esc and F10");
+    m_RtStringStep = tr("Step: %1");
+    m_RtStringCopyright = tr("Original game by Bill Kendrick\n"
+                             "Zaurus port by Robert Ernst\n"
+                             "Qt port by EXL\n"
+                             "(c) 2001-2014");
+    m_RtStringGameName = tr("PDA\nMaze");
+    m_RtStringCtrlKeysTitle = tr("Control\nKeys");
+    m_RtStringCtrlKeysBody = tr("Move: D-pad or W, A, S, D\n"
+                                "Show Map: Space or Enter\n"
+                                "New Game: F5\n"
+                                "Exit: Esc and F10");
 
-    m_cmp_east.load(QString("://images/images_i18n/cmp_east_%1.png").arg(m_lang));
-    m_cmp_north.load(QString("://images/images_i18n/cmp_north_%1.png").arg(m_lang));
-    m_cmp_south.load(QString("://images/images_i18n/cmp_south_%1.png").arg(m_lang));
-    m_cmp_west.load(QString("://images/images_i18n/cmp_west_%1.png").arg(m_lang));
+    /* Load PNG translatable images */
+    m_CompassEast.load(QString("://images/images_i18n/cmp_east_%1.png")
+                       .arg(m_AppLang));
+    m_ComapassNorth.load(QString("://images/images_i18n/cmp_north_%1.png")
+                         .arg(m_AppLang));
+    m_CompassSouth.load(QString("://images/images_i18n/cmp_south_%1.png")
+                        .arg(m_AppLang));
+    m_CompassWest.load(QString("://images/images_i18n/cmp_west_%1.png")
+                       .arg(m_AppLang));
 
-    m_timeup.load(QString("://images/images_i18n/timeup_%1.png").arg(m_lang));
-    m_youwin.load(QString("://images/images_i18n/youwin_%1.png").arg(m_lang));
+    m_PicTimeUp.load(QString("://images/images_i18n/timeup_%1.png")
+                     .arg(m_AppLang));
+    m_PicYouWin.load(QString("://images/images_i18n/youwin_%1.png")
+                     .arg(m_AppLang));
 
-#ifdef _DEBUG
-    qDebug() << "Retranslate PlayerField, Lang: " << m_lang;
-#endif
+    qDebug() << "Retranslate PlayerField, Lang: " << m_AppLang;
 
     repaint();
 }
 
-void CPlayField::paintEvent(QPaintEvent */*event*/)
+void CPlayField::paintEvent(QPaintEvent *event)
 {
-    switch (m_state) {
-    case Intro:
+    QWidget::paintEvent(event);
+    switch (e_GameState) {
+    case EIntro:
         drawIntro();
         break;
-    case Playing:
+    case EPlaying:
         drawPlaying();
         break;
-    case ViewMap:
+    case EViewMap:
         drawViewMap();
         break;
-    case GameOverWin:
+    case EGameOverWin:
         drawGameOverWin();
         break;
-    case GameOverLoose:
+    case EGameOverLoose:
         drawGameOverLoose();
         break;
-    case Help:
+    case EHelp:
         drawHelp();
         break;
     }
@@ -151,512 +160,548 @@ void CPlayField::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Up:
     case Qt::Key_W:
-    if (m_state == Playing) {
-        moveForward();
+    {
+        if (e_GameState == EPlaying) {
+            moveForward();
+        }
+        break;
     }
-    break;
     case Qt::Key_Down:
     case Qt::Key_S:
-    if (m_state == Playing) {
-        moveBackward();
+    {
+        if (e_GameState == EPlaying) {
+            moveBackward();
+        }
+        break;
     }
-    break;
     case Qt::Key_Left:
     case Qt::Key_A:
-    if (m_state == Playing) {
-        turnLeft();
+    {
+        if (e_GameState == EPlaying) {
+            turnLeft();
+        }
+        break;
     }
-    break;
     case Qt::Key_Right:
     case Qt::Key_D:
-    if (m_state == Playing) {
-        turnRight();
+    {
+        if (e_GameState == EPlaying) {
+            turnRight();
+        }
+        break;
     }
-    break;
     case Qt::Key_Space:
     case Qt::Key_Enter:
     case Qt::Key_Return:
-    if (m_state == Playing) {
-        m_state = ViewMap;
-        repaint();
-    } else if (m_state == ViewMap) {
-        m_state = Playing;
-        repaint();
-    } else {
-        start();
+    {
+        if (e_GameState == EPlaying) {
+            e_GameState = EViewMap;
+            repaint();
+        } else if (e_GameState == EViewMap) {
+            e_GameState = EPlaying;
+            repaint();
+        } else {
+            startGame();
+        }
+        break;
     }
-    break;
     case Qt::Key_Escape:
-    if (m_state == Playing || m_state == ViewMap) {
-        stop();
+    {
+        if (e_GameState == EPlaying || e_GameState == EViewMap) {
+            stopGame();
+        }
+        break;
     }
-    break;
     }
 }
 
 void CPlayField::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
-
-    if (m_state == Playing) {
-    int max_x = width();
-    if (event->y() > max_x) {
-        /* click on the lower area of the screen: compass, maze, timer */
-        m_state = ViewMap;
+    if (e_GameState == EPlaying) {
+        int xMax = width();
+        if (event->y() > xMax) {
+            /* Click on the lower area of the screen: compass, maze, timer */
+            e_GameState = EViewMap;
+            repaint();
+        } else if (abs(event->x() - event->y()) > 10
+                   && abs(xMax - event->x() - event->y()) > 10) {
+            /* Click in the upper/lower/left/right quarter of the screen */
+            int x = event->x();
+            int y = event->y();
+            if (x > y) {
+                if ((xMax - x) > y) {
+                    moveForward();
+                } else {
+                    turnRight();
+                }
+            } else {
+                if ((xMax - y) < x) {
+                    moveBackward();
+                } else {
+                    turnLeft();
+                }
+            }
+        }
+    } else if (e_GameState == EViewMap) {
+        e_GameState = EPlaying;
         repaint();
-    } else if (abs(event->x() - event->y()) > 10
-        && abs(max_x - event->x() - event->y()) > 10) {
-        /* click in the upper/lower/left/right quarter of the screen */
-        int x = event->x();
-        int y = event->y();
-        if (x > y) {
-        if ((max_x - x) > y) {
-            moveForward();
-        } else {
-            turnRight();
-        }
-        } else {
-        if ((max_x - y) < x) {
-            moveBackward();
-        } else {
-            turnLeft();
-        }
-        }
-
-    }
-    } else if (m_state == ViewMap) {
-    m_state = Playing;
-    repaint();
     } else {
-    start();
+        startGame();
     }
 }
 
 void CPlayField::timerTick(void)
 {
-    if (m_timer_mode == TimerDown) {
-    if (m_counter > 0) {
-        m_counter--;
-        if (m_counter == 0) {
-        m_state = GameOverLoose;
-        m_timer->stop();
+    if (e_TimerMode == CIniConfig::ETimerDown) {
+        if (timerCounter > 0) {
+            timerCounter--;
+            if (timerCounter == 0) {
+                e_GameState = EGameOverLoose;
+                m_GameTimer->stop();
+            }
         }
-    }
     } else {
-    m_counter++;
+        timerCounter++;
     }
     repaint();
 }
 
-void CPlayField::start(void)
+void CPlayField::startGame(void)
 {
-    m_state = Playing;
-    m_timer->start(1000/*, false*/);
-    m_counter = (m_timer_mode == TimerDown) ? (m_size * m_size ) - 1 : 0;
-    m_step = 0;
+    e_GameState = EPlaying;
+    m_GameTimer->start(1000);
+
+    if (e_TimerMode == CIniConfig::ETimerDown) {
+        timerCounter = (mapSize * mapSize ) - 1;
+    } else {
+        timerCounter = 0;
+    }
+
+    stepCounter = 0;
     makeMaze();
     repaint();
 }
 
-void CPlayField::stop(void)
+void CPlayField::stopGame(void)
 {
-    m_step = 0;
-    if (m_state != Intro) {
-    m_state = Intro;
-    m_timer->stop();
-    repaint();
-    }
-}
-
-void CPlayField::help()
-{
-    m_step = 0;
-    if (m_state != Help) {
-        m_state = Help;
-        m_timer->stop();
+    stepCounter = 0;
+    if (e_GameState != EIntro) {
+        e_GameState = EIntro;
+        m_GameTimer->stop();
         repaint();
     }
 }
 
-void CPlayField::updateTimerMode(int timer_mode)
+void CPlayField::showHelp(void)
 {
-    if (timer_mode != m_timer_mode) {
-    switch (timer_mode) {
-    case TimerDown:
-        m_timer_mode = TimerDown;
-        break;
-    default:
-        m_timer_mode = TimerUp;
-        break;
-    }
-    if (m_state == Playing || m_state == ViewMap) {
-        start();
-    }
+    stepCounter = 0;
+    if (e_GameState != EHelp) {
+        e_GameState = EHelp;
+        m_GameTimer->stop();
+        repaint();
     }
 }
 
-void CPlayField::updateMapMode(int map_mode)
+void CPlayField::setTimerMode(int aTimerMode)
 {
-    if (map_mode != m_map_mode) {
-    switch (map_mode) {
-    case MapAll:
-        m_map_mode = MapAll;
-        break;
-    case MapNone:
-        m_map_mode = MapNone;
-        break;
-    default:
-        m_map_mode = MapBuild;
-        break;
-    }
-    if (m_state == Playing || m_state == ViewMap) {
-        start();
-    }
+    if (aTimerMode != e_TimerMode) {
+        switch (aTimerMode) {
+        case CIniConfig::ETimerDown:
+            e_TimerMode = CIniConfig::ETimerDown;
+            break;
+        default:
+            e_TimerMode = CIniConfig::ETimerUp;
+            break;
+        }
+        if (e_GameState == EPlaying || e_GameState == EViewMap) {
+            startGame();
+        }
     }
 }
 
-void CPlayField::updateSize(int size)
+void CPlayField::setMapMode(int aMapMode)
 {
-    if (size != m_size) {
-    m_size = size;
-    if (m_state == Playing || m_state == ViewMap) {
-        start();
-    }
+    if (aMapMode != e_MapMode) {
+        switch (aMapMode) {
+        case CIniConfig::EMapAll:
+            e_MapMode = CIniConfig::EMapAll;
+            break;
+        case CIniConfig::EMapNone:
+            e_MapMode = CIniConfig::EMapNone;
+            break;
+        default:
+            e_MapMode = CIniConfig::EMapBuild;
+            break;
+        }
+        if (e_GameState == EPlaying || e_GameState == EViewMap) {
+            startGame();
+        }
     }
 }
 
-void CPlayField::updateStepStatus(bool qStep)
+void CPlayField::setMapSize(int aMapSize)
 {
-    m_bool_step = qStep;
+    if (aMapSize != mapSize) {
+        mapSize = aMapSize;
+        if (e_GameState == EPlaying || e_GameState == EViewMap) {
+            startGame();
+        }
+    }
+}
+
+void CPlayField::setStepStatus(bool aShowStep)
+{
+    showStep = aShowStep;
     repaint();
 }
 
-void CPlayField::updateScreenScale(int scale)
+void CPlayField::setScaleScreen(int aScaleScreen)
 {
-    if (!scale) {
-        m_scr_smooth = false;
+    if (!aScaleScreen) {
+        smoothScreen = false;
     }
-    m_scr_scale = scale;
+    scaleScreen = aScaleScreen;
     repaint();
 }
 
-void CPlayField::updateSmoothStatus(bool smooth)
+void CPlayField::setSmoothScreen(bool aSmoothScreen)
 {
-    if (!m_scr_scale) {
-        m_scr_smooth = false;
+    if (!scaleScreen) {
+        smoothScreen = false;
     } else {
-        m_scr_smooth = smooth;
+        smoothScreen = aSmoothScreen;
     }
     repaint();
 }
 
-void CPlayField::updateLang(QString lang)
+void CPlayField::setAppLang(QString aAppLang)
 {
-    m_lang = lang;
+    m_AppLang = aAppLang;
 }
 
 void CPlayField::drawIntro(void)
 {
-    QPainter painter_pixmap(m_pixmap);
-    QPainter painter_widget(this);
-    QColor black(0, 0, 0);
-    QColor white(255, 255, 255);
-    QColor dirtywhite(242, 243, 244);
+    QPainter m_PainterPixmap(m_MainPixmap);
+    QPainter m_PainterWidget(this);
+    QColor m_ColorBlack(0, 0, 0);
+    QColor m_ColorWhite(255, 255, 255);
+    QColor m_ColorDirtyWhite(242, 243, 244);
 
-    int max_x = 160;
-    int max_y = 177;
+    int xMax = 160;
+    int yMax = 177;
 
-    painter_pixmap.fillRect(0, 0, max_x, max_y, white);
-    painter_pixmap.setPen(white);
+    m_PainterPixmap.fillRect(0, 0, xMax, yMax, m_ColorWhite);
+    m_PainterPixmap.setPen(m_ColorWhite);
 
-    QFont f1 = painter_pixmap.font();
-    f1.setPixelSize(30);
-    f1.setBold(true);
-    QFont f2 = painter_pixmap.font();
-    f2.setPixelSize(10);
-    painter_pixmap.drawPixmap(0, 0, m_title);
-    painter_pixmap.setFont(f1);
-    painter_pixmap.setPen(black);
-    painter_pixmap.drawText(5, 5, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_gamename);
-    painter_pixmap.setPen(white);
-    painter_pixmap.drawText(0, 0, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_gamename);
+    QFont m_FontBig = m_PainterPixmap.font();
+    m_FontBig.setPixelSize(30);
+    m_FontBig.setBold(true);
+    QFont m_FontSmall = m_PainterPixmap.font();
+    m_FontSmall.setPixelSize(10);
+    m_PainterPixmap.drawPixmap(0, 0, m_PicGameTitle);
+    m_PainterPixmap.setFont(m_FontBig);
+    m_PainterPixmap.setPen(m_ColorBlack);
+    m_PainterPixmap.drawText(5, 5, xMax, xMax / 2,
+                             Qt::AlignHCenter | Qt::AlignVCenter,
+                             m_RtStringGameName);
+    m_PainterPixmap.setPen(m_ColorWhite);
+    m_PainterPixmap.drawText(0, 0, xMax, xMax / 2,
+                             Qt::AlignHCenter | Qt::AlignVCenter,
+                             m_RtStringGameName);
 
-    painter_pixmap.fillRect(3, (max_y / 2) + 25, max_x - (3 * 2), 50, dirtywhite);
+    m_PainterPixmap.fillRect(3, (yMax / 2) + 25, xMax - (3 * 2), 50,
+                             m_ColorDirtyWhite);
 
-    painter_pixmap.setFont(f2);
-    painter_pixmap.setPen(black);
-    painter_pixmap.drawText(4, (max_y / 2) + 25, max_x - (4 * 2), 50,
-                            Qt::AlignHCenter | Qt::AlignVCenter,
-                            m_rt_str_copyright);
-    drawAllOnWidget(painter_widget);
+    m_PainterPixmap.setFont(m_FontSmall);
+    m_PainterPixmap.setPen(m_ColorBlack);
+    m_PainterPixmap.drawText(4, (yMax / 2) + 25, xMax - (4 * 2), 50,
+                             Qt::AlignHCenter | Qt::AlignVCenter,
+                             m_RtStringCopyright);
+    drawAllOnWidget(m_PainterWidget);
 }
 
 void CPlayField::drawHelp(void)
 {
-    QPainter painter_pixmap(m_pixmap);
-    QPainter painter_widget(this);
-    QColor black(0, 0, 0);
-    QColor white(255, 255, 255);
-    QColor dirtywhite(250, 240, 190);
+    QPainter m_PainterPixmap(m_MainPixmap);
+    QPainter m_PainterWidget(this);
+    QColor m_ColorBlack(0, 0, 0);
+    QColor m_ColorWhite(255, 255, 255);
+    QColor m_ColorDirtyWhite(250, 240, 190);
 
-    int max_x = 160;
-    int max_y = 177;
+    int xMax = 160;
+    int yMax = 177;
 
-    painter_pixmap.fillRect(0, 0, max_x, max_y, white);
-    painter_pixmap.setPen(white);
+    m_PainterPixmap.fillRect(0, 0, xMax, yMax, m_ColorWhite);
+    m_PainterPixmap.setPen(m_ColorWhite);
 
-    QFont f1 = painter_pixmap.font();
-    f1.setPixelSize(30);
-    f1.setBold(true);
-    QFont f2 = painter_pixmap.font();
-    f2.setPixelSize(10);
-    painter_pixmap.drawPixmap(0, 0, m_title);
-    painter_pixmap.setFont(f1);
-    painter_pixmap.setPen(black);
-    painter_pixmap.drawText(5, 5, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_kktitle);
-    painter_pixmap.setPen(white);
-    painter_pixmap.drawText(0, 0, max_x, max_x / 2, Qt::AlignHCenter | Qt::AlignVCenter, m_rt_str_kktitle);
+    QFont m_FontBig = m_PainterPixmap.font();
+    m_FontBig.setPixelSize(30);
+    m_FontBig.setBold(true);
+    QFont m_FontSmall = m_PainterPixmap.font();
+    m_FontSmall.setPixelSize(10);
+    m_PainterPixmap.drawPixmap(0, 0, m_PicGameTitle);
+    m_PainterPixmap.setFont(m_FontBig);
+    m_PainterPixmap.setPen(m_ColorBlack);
+    m_PainterPixmap.drawText(5, 5, xMax, xMax / 2,
+                             Qt::AlignHCenter | Qt::AlignVCenter,
+                             m_RtStringCtrlKeysTitle);
+    m_PainterPixmap.setPen(m_ColorWhite);
+    m_PainterPixmap.drawText(0, 0, xMax, xMax / 2,
+                             Qt::AlignHCenter | Qt::AlignVCenter,
+                             m_RtStringCtrlKeysTitle);
 
-    painter_pixmap.fillRect(3, (max_y / 2) + 25, max_x - (3 * 2), 50, dirtywhite);
+    m_PainterPixmap.fillRect(3, (yMax / 2) + 25, xMax - (3 * 2), 50,
+                             m_ColorDirtyWhite);
 
-    painter_pixmap.setFont(f2);
-    painter_pixmap.setPen(black);
-    painter_pixmap.drawText(5, (max_y / 2) + 25, max_x - (4 * 2), 50,
-                            Qt::AlignLeft,
-                            m_rt_str_kkbody);
-    drawAllOnWidget(painter_widget);
+    m_PainterPixmap.setFont(m_FontSmall);
+    m_PainterPixmap.setPen(m_ColorBlack);
+    m_PainterPixmap.drawText(5, (yMax / 2) + 25, xMax - (4 * 2), 50,
+                             Qt::AlignLeft,
+                             m_RtStringCtrlKeysBody);
+    drawAllOnWidget(m_PainterWidget);
 }
 
 void CPlayField::drawPlaying(void)
 {
-    QPainter painter_pixmap(m_pixmap);
-    QPainter painter_widget(this);
-    QColor white(255, 255, 255);
+    QPainter m_PainterPixmap(m_MainPixmap);
+    QPainter m_PainterWidget(this);
+    QColor m_ColorWhite(255, 255, 255);
 
-    int max_x = 160;
-    int max_y = 177;
+    int xMax = 160;
+    int yMax = 177;
 
-    painter_pixmap.fillRect(0, 0, max_x, max_y, white);
-    painter_pixmap.setPen(white);
+    m_PainterPixmap.fillRect(0, 0, xMax, yMax, m_ColorWhite);
+    m_PainterPixmap.setPen(m_ColorWhite);
 
-    drawMazeView(painter_pixmap);
-    drawCompass(painter_pixmap);
-    drawTime(painter_pixmap);
-    drawSteps(painter_pixmap);
-    drawAllOnWidget(painter_widget);
+    drawMazeView(m_PainterPixmap);
+    drawCompass(m_PainterPixmap);
+    drawTime(m_PainterPixmap);
+    drawStepCounter(m_PainterPixmap);
+    drawAllOnWidget(m_PainterWidget);
 }
 
 void CPlayField::drawViewMap(void)
 {
-    QPainter painter_pixmap(m_pixmap);
-    QPainter painter_widget(this);
-    QColor black(0, 0, 0);
-    QColor grey(192, 192, 192);
-    QColor white(255, 255, 255);
-    QColor red(255, 0, 0);
+    QPainter m_PainterPixmap(m_MainPixmap);
+    QPainter m_PainterWidget(this);
+    QColor m_colorBlack(0, 0, 0);
+    QColor m_colorGrey(192, 192, 192);
+    QColor m_colorWhite(255, 255, 255);
+    QColor m_colorRed(255, 0, 0);
 
-    int max_x = 160;
-    int max_y = 177;
+    int xMax = 160;
+    int yMax = 177;
 
-    int xsize = max_x / m_size;
-    int ysize = max_x / m_size;
-    int xoffs = (max_x - xsize * m_size) / 2;
-    int yoffs = (max_x - ysize * m_size) / 2;
-    int x;
-    int y;
+    int xSize = xMax / mapSize;
+    int ySize = xMax / mapSize;
+    int xOffs = (xMax - xSize * mapSize) / 2;
+    int yOffs = (xMax - ySize * mapSize) / 2;
 
-    painter_pixmap.fillRect(0, 0, max_x, max_y, white);
-    painter_pixmap.setPen(white);
+    m_PainterPixmap.fillRect(0, 0, xMax, yMax, m_colorWhite);
+    m_PainterPixmap.setPen(m_colorWhite);
 
-    for (y = 0; y < m_size; y++) {
-    for (x = 0; x < m_size; x++) {
-        if (x == m_xpos && y == m_ypos) {
-        painter_pixmap.fillRect(xoffs + x * xsize, yoffs + y * ysize, xsize, ysize, red);
-        } else if (m_map_mode == MapNone
-        || (m_map_mode == MapBuild && m_seen[y][x] == false)) {
-        painter_pixmap.fillRect(xoffs + x * xsize, yoffs + y * ysize, xsize, ysize, grey);
-        } else if (m_maze[y][x] == 255) {
-        painter_pixmap.fillRect(xoffs + x * xsize, yoffs + y * ysize, xsize, ysize, black);
-        } else {
-        painter_pixmap.fillRect(xoffs + x * xsize, yoffs + y * ysize, xsize, ysize, white);
+    for (int y = 0; y < mapSize; y++) {
+        for (int x = 0; x < mapSize; x++) {
+            if (x == xPos && y == yPos) {
+                m_PainterPixmap.fillRect(xOffs + x * xSize,
+                                         yOffs + y * ySize,
+                                         xSize, ySize, m_colorRed);
+            } else if (e_MapMode == CIniConfig::EMapNone
+                       || (e_MapMode == CIniConfig::EMapBuild
+                           && viewedMaze[y][x] == false)) {
+                m_PainterPixmap.fillRect(xOffs + x * xSize,
+                                         yOffs + y * ySize,
+                                         xSize, ySize, m_colorGrey);
+            } else if (theMaze[y][x] == 255) {
+                m_PainterPixmap.fillRect(xOffs + x * xSize,
+                                         yOffs + y * ySize,
+                                         xSize, ySize, m_colorBlack);
+            } else {
+                m_PainterPixmap.fillRect(xOffs + x * xSize,
+                                         yOffs + y * ySize,
+                                         xSize, ySize, m_colorWhite);
+            }
         }
     }
-    }
-    drawCompass(painter_pixmap);
-    drawTime(painter_pixmap);
-    drawAllOnWidget(painter_widget);
+
+    drawCompass(m_PainterPixmap);
+    drawTime(m_PainterPixmap);
+    drawAllOnWidget(m_PainterWidget);
 }
 
 void CPlayField::drawGameOverWin(void)
 {
-    QPainter painter_pixmap(m_pixmap);
-    QPainter painter_widget(this);
-    QColor white(255, 255, 255);
+    QPainter m_PainterPixmap(m_MainPixmap);
+    QPainter m_PainterWidget(this);
+    QColor m_ColorWhite(255, 255, 255);
 
-    int max_x = 160;
-    int max_y = 177;
+    int xMax = 160;
+    int yMax = 177;
 
-    painter_pixmap.fillRect(0, 0, max_x, max_y, white);
-    painter_pixmap.setPen(white);
+    m_PainterPixmap.fillRect(0, 0, xMax, yMax, m_ColorWhite);
+    m_PainterPixmap.setPen(m_ColorWhite);
 
-    int xoffs = (max_x - m_youwin.width()) / 2;
-    int yoffs = (max_y - m_youwin.height()) / 2;
-    drawMazeView(painter_pixmap);
-    drawCompass(painter_pixmap);
-    drawTime(painter_pixmap);
-    drawSteps(painter_pixmap);
-    painter_pixmap.drawPixmap(xoffs, yoffs, m_youwin);
-    drawAllOnWidget(painter_widget);
+    int xOffs = (xMax - m_PicYouWin.width()) / 2;
+    int yOffs = (yMax - m_PicYouWin.height()) / 2;
+
+    drawMazeView(m_PainterPixmap);
+    drawCompass(m_PainterPixmap);
+    drawTime(m_PainterPixmap);
+    drawStepCounter(m_PainterPixmap);
+
+    m_PainterPixmap.drawPixmap(xOffs, yOffs, m_PicYouWin);
+
+    drawAllOnWidget(m_PainterWidget);
 }
 
 void CPlayField::drawGameOverLoose(void)
 {
-    QPainter painter_pixmap(m_pixmap);
-    QPainter painter_widget(this);
-    QColor white(255, 255, 255);
+    QPainter m_PainterPixmap(m_MainPixmap);
+    QPainter m_PainterWidget(this);
+    QColor m_ColorWhite(255, 255, 255);
 
-    int max_x = 160;
-    int max_y = 177;
+    int xMax = 160;
+    int yMax = 177;
 
-    painter_pixmap.fillRect(0, 0, max_x, max_y, white);
-    painter_pixmap.setPen(white);
+    m_PainterPixmap.fillRect(0, 0, xMax, yMax, m_ColorWhite);
+    m_PainterPixmap.setPen(m_ColorWhite);
 
-    int xoffs = (max_x - m_timeup.width()) / 2;
-    int yoffs = (max_y - m_timeup.height()) / 2;
-    drawMazeView(painter_pixmap);
-    drawCompass(painter_pixmap);
-    drawTime(painter_pixmap);
-    drawSteps(painter_pixmap);
-    painter_pixmap.drawPixmap(xoffs, yoffs, m_timeup);
-    drawAllOnWidget(painter_widget);
+    int xOffs = (xMax - m_PicTimeUp.width()) / 2;
+    int yOffs = (yMax - m_PicTimeUp.height()) / 2;
+
+    drawMazeView(m_PainterPixmap);
+    drawCompass(m_PainterPixmap);
+    drawTime(m_PainterPixmap);
+    drawStepCounter(m_PainterPixmap);
+
+    m_PainterPixmap.drawPixmap(xOffs, yOffs, m_PicTimeUp);
+
+    drawAllOnWidget(m_PainterWidget);
 }
 
 void CPlayField::drawAllOnWidget(QPainter &painter)
 {
-    switch (m_scr_scale) {
-    case 0:
+    switch (scaleScreen) {
+    case CIniConfig::ERes160x177:
     default:
-    {
-        painter.drawPixmap(0, 0, *m_pixmap);
+        painter.drawPixmap(0, 0, *m_MainPixmap);
         break;
-    }
-    case 1:
-    {
+    case CIniConfig::ERes240x265:
         painter.drawPixmap(0, 0,
-                           m_pixmap->scaled(240, 265,
-                                            Qt::IgnoreAspectRatio, // Qt::KeepAspectRatio
-                                            (m_scr_smooth) ?
-                                                Qt::SmoothTransformation:
-                                                Qt::FastTransformation));
+                           m_MainPixmap->scaled(240, 265,
+                                                Qt::IgnoreAspectRatio,
+                                                (smoothScreen) ?
+                                                    Qt::SmoothTransformation:
+                                                    Qt::FastTransformation));
         break;
-    }
-    case 2:
-    {
+    case CIniConfig::ERes480x531:
         painter.drawPixmap(0, 0,
-                           m_pixmap->scaled(480, 531,
-                                            Qt::IgnoreAspectRatio, // Qt::KeepAspectRatio
-                                            (m_scr_smooth) ?
-                                                Qt::SmoothTransformation:
-                                                Qt::FastTransformation));
+                           m_MainPixmap->scaled(480, 531,
+                                                Qt::IgnoreAspectRatio,
+                                                (smoothScreen) ?
+                                                    Qt::SmoothTransformation:
+                                                    Qt::FastTransformation));
         break;
-    }
     }
 }
 
 void CPlayField::moveForward(void)
 {
-    int xpos = m_xpos + xpos_inc[m_dir];
-    int ypos = m_ypos + ypos_inc[m_dir];
+    int _xPos = xPos + xPosInc[e_Direction];
+    int _yPos = yPos + yPosInc[e_Direction];
 
-    if (m_maze[ypos][xpos] != 255) {
-    m_step++;
-    m_xpos = xpos;
-    m_ypos = ypos;
-    m_seen[m_ypos - 1][m_xpos - 1] = true;
-    m_seen[m_ypos - 1][m_xpos + 0] = true;
-    m_seen[m_ypos - 1][m_xpos + 1] = true;
-    m_seen[m_ypos + 0][m_xpos - 1] = true;
-    m_seen[m_ypos + 0][m_xpos + 0] = true;
-    m_seen[m_ypos + 0][m_xpos + 1] = true;
-    m_seen[m_ypos + 1][m_xpos - 1] = true;
-    m_seen[m_ypos + 1][m_xpos + 0] = true;
-    m_seen[m_ypos + 1][m_xpos + 1] = true;
-    if (m_xpos == 1 && m_ypos == 2) {
-        m_state = GameOverWin;
-        m_timer->stop();
-    }
-    repaint();
+    if (theMaze[_yPos][_xPos] != 255) {
+        stepCounter++;
+        xPos = _xPos;
+        yPos = _yPos;
+        viewedMaze[yPos - 1][xPos - 1] = true;
+        viewedMaze[yPos - 1][xPos + 0] = true;
+        viewedMaze[yPos - 1][xPos + 1] = true;
+        viewedMaze[yPos + 0][xPos - 1] = true;
+        viewedMaze[yPos + 0][xPos + 0] = true;
+        viewedMaze[yPos + 0][xPos + 1] = true;
+        viewedMaze[yPos + 1][xPos - 1] = true;
+        viewedMaze[yPos + 1][xPos + 0] = true;
+        viewedMaze[yPos + 1][xPos + 1] = true;
+        if (xPos == 1 && yPos == 2) {
+            e_GameState = EGameOverWin;
+            m_GameTimer->stop();
+        }
+        repaint();
     }
 }
 
 void CPlayField::moveBackward(void)
 {
-    int xpos = m_xpos - xpos_inc[m_dir];
-    int ypos = m_ypos - ypos_inc[m_dir];
+    int _xPos = xPos - xPosInc[e_Direction];
+    int _yPos = yPos - yPosInc[e_Direction];
 
-    if (m_maze[ypos][xpos] != 255) {
-    m_step++;
-    m_xpos = xpos;
-    m_ypos = ypos;
-    m_seen[m_ypos - 1][m_xpos - 1] = true;
-    m_seen[m_ypos - 1][m_xpos + 0] = true;
-    m_seen[m_ypos - 1][m_xpos + 1] = true;
-    m_seen[m_ypos + 0][m_xpos - 1] = true;
-    m_seen[m_ypos + 0][m_xpos + 0] = true;
-    m_seen[m_ypos + 0][m_xpos + 1] = true;
-    m_seen[m_ypos + 1][m_xpos - 1] = true;
-    m_seen[m_ypos + 1][m_xpos + 0] = true;
-    m_seen[m_ypos + 1][m_xpos + 1] = true;
-    if (m_xpos == 1 && m_ypos == 2) {
-        m_state = GameOverWin;
-    }
-    repaint();
+    if (theMaze[_yPos][_xPos] != 255) {
+        stepCounter++;
+        xPos = _xPos;
+        yPos = _yPos;
+        viewedMaze[yPos - 1][xPos - 1] = true;
+        viewedMaze[yPos - 1][xPos + 0] = true;
+        viewedMaze[yPos - 1][xPos + 1] = true;
+        viewedMaze[yPos + 0][xPos - 1] = true;
+        viewedMaze[yPos + 0][xPos + 0] = true;
+        viewedMaze[yPos + 0][xPos + 1] = true;
+        viewedMaze[yPos + 1][xPos - 1] = true;
+        viewedMaze[yPos + 1][xPos + 0] = true;
+        viewedMaze[yPos + 1][xPos + 1] = true;
+        if (xPos == 1 && yPos == 2) {
+            e_GameState = EGameOverWin;
+        }
+        repaint();
     }
 }
 
 void CPlayField::turnLeft(void)
 {
-    switch (m_dir) {
-    case North:
-    m_dir = West;
-    break;
-    case East:
-    m_dir = North;
-    break;
-    case South:
-    m_dir = East;
-    break;
-    case West:
-    m_dir = South;
-    break;
+    switch (e_Direction) {
+    case ENorth:
+        e_Direction = EWest;
+        break;
+    case EEast:
+        e_Direction = ENorth;
+        break;
+    case ESouth:
+        e_Direction = EEast;
+        break;
+    case EWest:
+        e_Direction = ESouth;
+        break;
     }
     repaint();
 }
 
 void CPlayField::turnRight(void)
 {
-    switch (m_dir) {
-    case North:
-    m_dir = East;
-    break;
-    case East:
-    m_dir = South;
-    break;
-    case South:
-    m_dir = West;
-    break;
-    case West:
-    m_dir = North;
-    break;
+    switch (e_Direction) {
+    case ENorth:
+        e_Direction = EEast;
+        break;
+    case EEast:
+        e_Direction = ESouth;
+        break;
+    case ESouth:
+        e_Direction = EWest;
+        break;
+    case EWest:
+        e_Direction = ENorth;
+        break;
     }
     repaint();
 }
 
-int CPlayField::mazeChunk(int xpos, int ypos)
+int CPlayField::mazeChunk(int aXPos, int aYPos)
 {
     /* This is the function mazechunk() from Bill Kendricks pdamaze.c */
-    return (xpos > 0 && ypos > 0 && xpos < (m_size - 1) && ypos < (m_size - 1))
-    ? m_maze[ypos][xpos] : -1;
+    return (aXPos > 0
+            && aYPos > 0
+            && aXPos < (mapSize - 1)
+            && aYPos < (mapSize - 1)) ? theMaze[aYPos][aXPos] : -1;
 }
 
 void CPlayField::makeMaze(void)
@@ -665,16 +710,16 @@ void CPlayField::makeMaze(void)
     int x;
     int y;
 
-    for (y = 1; y < (m_size - 1); y++) {
-    for (x = 1; x < (m_size - 1); x++) {
-        m_maze[y][x] = 255;
+    for (y = 1; y < (mapSize - 1); y++) {
+        for (x = 1; x < (mapSize - 1); x++) {
+            theMaze[y][x] = 255;
+        }
+        theMaze[y][0] = -1;
+        theMaze[y][mapSize - 1] = -1;
     }
-    m_maze[y][0] = -1;
-    m_maze[y][m_size - 1] = -1;
-    }
-    for (x = 0; x < m_size; x++) {
-    m_maze[0][x] = -1;
-    m_maze[m_size - 1][x] = -1;
+    for (x = 0; x < mapSize; x++) {
+        theMaze[0][x] = -1;
+        theMaze[mapSize - 1][x] = -1;
     }
 
     y = 2;
@@ -682,182 +727,182 @@ void CPlayField::makeMaze(void)
     int xx = 0;
     int j = 0;
     int ok = 2;
-    m_maze[y][x] = 5;
+    theMaze[y][x] = 5;
 
     do {
-    if (ok == 2) {
-        j = (rand() % 4);
-        xx = j;
-    }
-    ok = 0;
-    int nx = x + xpos_inc[j] * 2;
-    int ny = y + ypos_inc[j] * 2;
-    if (mazeChunk(nx, ny) == 255) {
-        m_maze[ny][nx] = j + 1;
-        m_maze[y + ypos_inc[j]][x + xpos_inc[j]] = 0;
-        x = nx;
-        y = ny;
-        ok = 2;
-    }
-    if (ok == 0) {
-        if (j < 3) {
-        j = j + 1;
-        while (j > 3) {
-            j = j - 4;
+        if (ok == 2) {
+            j = (rand() % 4);
+            xx = j;
         }
-        } else {
-        j = 0;
+        ok = 0;
+        int nx = x + xPosInc[j] * 2;
+        int ny = y + yPosInc[j] * 2;
+        if (mazeChunk(nx, ny) == 255) {
+            theMaze[ny][nx] = j + 1;
+            theMaze[y + yPosInc[j]][x + xPosInc[j]] = 0;
+            x = nx;
+            y = ny;
+            ok = 2;
         }
-        if (j != xx) {
-        ok = 1;
+        if (ok == 0) {
+            if (j < 3) {
+                j = j + 1;
+                while (j > 3) {
+                    j = j - 4;
+                }
+            } else {
+                j = 0;
+            }
+            if (j != xx) {
+                ok = 1;
+            }
         }
-    }
-    if (ok == 0) {
-        j = mazeChunk(x, y);
-        m_maze[y][x] = 0;
-        if (j < 5) {
-        x = x - (xpos_inc[j - 1] * 2);
-        y = y - (ypos_inc[j - 1] * 2);
-        ok = 2;
+        if (ok == 0) {
+            j = mazeChunk(x, y);
+            theMaze[y][x] = 0;
+            if (j < 5) {
+                x = x - (xPosInc[j - 1] * 2);
+                y = y - (yPosInc[j - 1] * 2);
+                ok = 2;
+            }
         }
-    }
     } while (ok != 0);
 
-    for (x = 0; x < m_size; x++) {
-    m_seen[0][x] = 1;
-    m_seen[1][x] = 1;
-    m_seen[m_size - 2][x] = 1;
-    m_seen[m_size - 1][x] = 1;
+    for (x = 0; x < mapSize; x++) {
+        viewedMaze[0][x] = 1;
+        viewedMaze[1][x] = 1;
+        viewedMaze[mapSize - 2][x] = 1;
+        viewedMaze[mapSize - 1][x] = 1;
     }
-    for (y = 2; y < m_size - 2; y++) {
-    m_seen[y][0] = 1;
-    m_seen[y][1] = 1;
-    m_seen[y][m_size - 2] = 1;
-    m_seen[y][m_size - 1] = 1;
-    for (x = 2; x < m_size - 2; x++) {
-        m_seen[y][x] = 0;
-    }
+    for (y = 2; y < mapSize - 2; y++) {
+        viewedMaze[y][0] = 1;
+        viewedMaze[y][1] = 1;
+        viewedMaze[y][mapSize - 2] = 1;
+        viewedMaze[y][mapSize - 1] = 1;
+        for (x = 2; x < mapSize - 2; x++) {
+            viewedMaze[y][x] = 0;
+        }
     }
 
-    m_maze[2][1] = 0;
+    theMaze[2][1] = 0;
 
-    m_xpos = m_size / 2 + 1;
-    m_ypos = m_size / 2 + 1;
-    m_xpos = m_xpos + (m_xpos % 2);
-    m_ypos = m_ypos + (m_ypos % 2);
+    xPos = mapSize / 2 + 1;
+    yPos = mapSize / 2 + 1;
+    xPos = xPos + (xPos % 2);
+    yPos = yPos + (yPos % 2);
     do {
-    switch(rand() % 4) {
-    case 0:
-        m_dir = North;
-        break;
-    case 1:
-        m_dir = South;
-        break;
-    case 2:
-        m_dir = West;
-        break;
-    case 3:
-        m_dir = East;
-        break;
-    }
-    } while (m_maze[m_ypos + ypos_inc[m_dir]][m_xpos + xpos_inc[m_dir]] == 255);
+        switch (rand() % 4) {
+        case 0:
+            e_Direction = ENorth;
+            break;
+        case 1:
+            e_Direction = ESouth;
+            break;
+        case 2:
+            e_Direction = EWest;
+            break;
+        case 3:
+            e_Direction = EEast;
+            break;
+        }
+    } while (theMaze[yPos + yPosInc[e_Direction]][xPos + xPosInc[e_Direction]]
+             == 255);
 }
 
 void CPlayField::drawMazeView(QPainter &painter)
 {
-    switch (m_dir) {
-    case North:
-    painter.drawPixmap(0, 0, m_bkg_north);
-    break;
-    case East:
-    painter.drawPixmap(0, 0, m_bkg_east);
-    break;
-    case South:
-    painter.drawPixmap(0, 0, m_bkg_south);
-    break;
-    case West:
-    painter.drawPixmap(0, 0, m_bkg_west);
-    break;
+    switch (e_Direction) {
+    case ENorth:
+        painter.drawPixmap(0, 0, m_BackgroundNorth);
+        break;
+    case EEast:
+        painter.drawPixmap(0, 0, m_BackgroundEast);
+        break;
+    case ESouth:
+        painter.drawPixmap(0, 0, m_BackgroundSouth);
+        break;
+    case EWest:
+        painter.drawPixmap(0, 0, m_BackgroundWest);
+        break;
     }
-    painter.drawPixmap(0, 80, m_ground);
+    painter.drawPixmap(0, 80, m_Ground);
 
-    switch (m_dir) {
-    case North:
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos - 3), DistFar, -1);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos - 3), DistFar, 1);
-    drawWall(painter, mazeChunk(m_xpos + 0, m_ypos - 3), DistFar, 0);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos - 2), DistMid, -1);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos - 2), DistMid, 1);
-    drawWall(painter, mazeChunk(m_xpos + 0, m_ypos - 2), DistMid, 0);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos - 1), DistClose, -1);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos - 1), DistClose, 1);
-    drawWall(painter, mazeChunk(m_xpos + 0, m_ypos - 1), DistClose, 0);
-    break;
-    case East:
-    drawWall(painter, mazeChunk(m_xpos + 3, m_ypos - 1), DistFar, -1);
-    drawWall(painter, mazeChunk(m_xpos + 3, m_ypos + 1), DistFar, 1);
-    drawWall(painter, mazeChunk(m_xpos + 3, m_ypos + 0), DistFar, 0);
-    drawWall(painter, mazeChunk(m_xpos + 2, m_ypos - 1), DistMid, -1);
-    drawWall(painter, mazeChunk(m_xpos + 2, m_ypos + 1), DistMid, 1);
-    drawWall(painter, mazeChunk(m_xpos + 2, m_ypos + 0), DistMid, 0);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos - 1), DistClose, -1);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos + 1), DistClose, 1);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos + 0), DistClose, 0);
-    break;
-    case South:
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos + 3), DistFar, -1);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos + 3), DistFar, 1);
-    drawWall(painter, mazeChunk(m_xpos + 0, m_ypos + 3), DistFar, 0);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos + 2), DistMid, -1);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos + 2), DistMid, 1);
-    drawWall(painter, mazeChunk(m_xpos + 0, m_ypos + 2), DistMid, 0);
-    drawWall(painter, mazeChunk(m_xpos + 1, m_ypos + 1), DistClose, -1);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos + 1), DistClose, 1);
-    drawWall(painter, mazeChunk(m_xpos + 0, m_ypos + 1), DistClose, 0);
-    break;
-    case West:
-    drawWall(painter, mazeChunk(m_xpos - 3, m_ypos + 1), DistFar, -1);
-    drawWall(painter, mazeChunk(m_xpos - 3, m_ypos - 1), DistFar, 1);
-    drawWall(painter, mazeChunk(m_xpos - 3, m_ypos + 0), DistFar, 0);
-    drawWall(painter, mazeChunk(m_xpos - 2, m_ypos + 1), DistMid, -1);
-    drawWall(painter, mazeChunk(m_xpos - 2, m_ypos - 1), DistMid, 1);
-    drawWall(painter, mazeChunk(m_xpos - 2, m_ypos + 0), DistMid, 0);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos + 1), DistClose, -1);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos - 1), DistClose, 1);
-    drawWall(painter, mazeChunk(m_xpos - 1, m_ypos + 0), DistClose, 0);
-    break;
+    switch (e_Direction) {
+    case ENorth:
+        drawWall(painter, mazeChunk(xPos - 1, yPos - 3), EDistanceFar, -1);
+        drawWall(painter, mazeChunk(xPos + 1, yPos - 3), EDistanceFar, 1);
+        drawWall(painter, mazeChunk(xPos + 0, yPos - 3), EDistanceFar, 0);
+        drawWall(painter, mazeChunk(xPos - 1, yPos - 2), EDistanceMid, -1);
+        drawWall(painter, mazeChunk(xPos + 1, yPos - 2), EDistanceMid, 1);
+        drawWall(painter, mazeChunk(xPos + 0, yPos - 2), EDistanceMid, 0);
+        drawWall(painter, mazeChunk(xPos - 1, yPos - 1), EDistanceClose, -1);
+        drawWall(painter, mazeChunk(xPos + 1, yPos - 1), EDistanceClose, 1);
+        drawWall(painter, mazeChunk(xPos + 0, yPos - 1), EDistanceClose, 0);
+        break;
+    case EEast:
+        drawWall(painter, mazeChunk(xPos + 3, yPos - 1), EDistanceFar, -1);
+        drawWall(painter, mazeChunk(xPos + 3, yPos + 1), EDistanceFar, 1);
+        drawWall(painter, mazeChunk(xPos + 3, yPos + 0), EDistanceFar, 0);
+        drawWall(painter, mazeChunk(xPos + 2, yPos - 1), EDistanceMid, -1);
+        drawWall(painter, mazeChunk(xPos + 2, yPos + 1), EDistanceMid, 1);
+        drawWall(painter, mazeChunk(xPos + 2, yPos + 0), EDistanceMid, 0);
+        drawWall(painter, mazeChunk(xPos + 1, yPos - 1), EDistanceClose, -1);
+        drawWall(painter, mazeChunk(xPos + 1, yPos + 1), EDistanceClose, 1);
+        drawWall(painter, mazeChunk(xPos + 1, yPos + 0), EDistanceClose, 0);
+        break;
+    case ESouth:
+        drawWall(painter, mazeChunk(xPos + 1, yPos + 3), EDistanceFar, -1);
+        drawWall(painter, mazeChunk(xPos - 1, yPos + 3), EDistanceFar, 1);
+        drawWall(painter, mazeChunk(xPos + 0, yPos + 3), EDistanceFar, 0);
+        drawWall(painter, mazeChunk(xPos + 1, yPos + 2), EDistanceMid, -1);
+        drawWall(painter, mazeChunk(xPos - 1, yPos + 2), EDistanceMid, 1);
+        drawWall(painter, mazeChunk(xPos + 0, yPos + 2), EDistanceMid, 0);
+        drawWall(painter, mazeChunk(xPos + 1, yPos + 1), EDistanceClose, -1);
+        drawWall(painter, mazeChunk(xPos - 1, yPos + 1), EDistanceClose, 1);
+        drawWall(painter, mazeChunk(xPos + 0, yPos + 1), EDistanceClose, 0);
+        break;
+    case EWest:
+        drawWall(painter, mazeChunk(xPos - 3, yPos + 1), EDistanceFar, -1);
+        drawWall(painter, mazeChunk(xPos - 3, yPos - 1), EDistanceFar, 1);
+        drawWall(painter, mazeChunk(xPos - 3, yPos + 0), EDistanceFar, 0);
+        drawWall(painter, mazeChunk(xPos - 2, yPos + 1), EDistanceMid, -1);
+        drawWall(painter, mazeChunk(xPos - 2, yPos - 1), EDistanceMid, 1);
+        drawWall(painter, mazeChunk(xPos - 2, yPos + 0), EDistanceMid, 0);
+        drawWall(painter, mazeChunk(xPos - 1, yPos + 1), EDistanceClose, -1);
+        drawWall(painter, mazeChunk(xPos - 1, yPos - 1), EDistanceClose, 1);
+        drawWall(painter, mazeChunk(xPos - 1, yPos + 0), EDistanceClose, 0);
+        break;
     }
 }
 
 void CPlayField::drawCompass(QPainter &painter)
 {
-    int max_x = 160;
+    int xMax = 160;
 
-    switch (m_dir) {
-    case North:
-    painter.drawPixmap(0, max_x, m_cmp_north);
-    break;
-    case East:
-    painter.drawPixmap(0, max_x, m_cmp_east);
-    break;
-    case South:
-    painter.drawPixmap(0, max_x, m_cmp_south);
-    break;
-    case West:
-    painter.drawPixmap(0, max_x, m_cmp_west);
-    break;
+    switch (e_Direction) {
+    case ENorth:
+        painter.drawPixmap(0, xMax, m_ComapassNorth);
+        break;
+    case EEast:
+        painter.drawPixmap(0, xMax, m_CompassEast);
+        break;
+    case ESouth:
+        painter.drawPixmap(0, xMax, m_CompassSouth);
+        break;
+    case EWest:
+        painter.drawPixmap(0, xMax, m_CompassWest);
+        break;
     }
 }
 
 void CPlayField::drawTime(QPainter &painter)
 {
-    int max_x = 160;
+    int xMax = 160;
 
-    int min = (m_counter / 60) % 60;
-    int sec = m_counter % 60;
-    int i;
+    int min = (timerCounter / 60) % 60;
+    int sec = timerCounter % 60;
 
-    char str[5] = {
+    char time_string[5] = {
         (char)((min / 10) + '0'),
         (char)((min % 10) + '0'),
         ':',
@@ -865,167 +910,181 @@ void CPlayField::drawTime(QPainter &painter)
         (char)((sec % 10) + '0')
     };
 
-    for (i = 0; i < 5; i++) {
-        int number = str[i] - '0';
-        painter.drawPixmap(118 + i * 8, max_x + 2, m_numbers, number * 8, 0, 8, 12);
+    for (int i = 0; i < 5; i++) {
+        int number = time_string[i] - '0';
+        painter.drawPixmap(118 + i * 8, xMax + 2,
+                           m_TimerNumbers, number * 8, 0, 8, 12);
     }
 }
 
-void CPlayField::drawSteps(QPainter &painter)
+void CPlayField::drawStepCounter(QPainter &painter)
 {
-    if (m_bool_step) {
-        int w = painter.fontMetrics().width(m_rt_str_step.arg(m_step));
-        int h = painter.fontMetrics().height();
+    if (showStep) {
+        int width = painter.fontMetrics()
+                .width(m_RtStringStep.arg(stepCounter));
+        int height = painter.fontMetrics().height();
 
-        painter.fillRect(100, 2, w, h, QColor(242, 243, 244));
+        painter.fillRect(100, 2, width, height, QColor(242, 243, 244));
 
         painter.setPen(Qt::black);
-        painter.drawText(100, 2, w, h, Qt::AlignRight, m_rt_str_step.arg(m_step));
+        painter.drawText(100, 2, width, height,
+                         Qt::AlignRight, m_RtStringStep.arg(stepCounter));
     }
 }
 
-void CPlayField::drawWall(QPainter &painter, int block, enum Dist dist, int xoffset)
+void CPlayField::drawWall(QPainter &painter,
+                          int aBlock, enum TDistance aDist, int aXOffset)
 {
-    if (block == 255) {
-    if (dist == DistFar) {
-        if (xoffset < 0) {
-        drawFarCenter(painter, 80 - 12 + (xoffset * 24));
-        drawFarLeft(painter, 80 - 12 + (xoffset * 24) + 24);
-        } else if (xoffset == 0) {
-        drawFarCenter(painter, 80 - 12);
-        } else if (xoffset > 0) {
-        drawFarCenter(painter, 80 - 12 + (xoffset * 24));
-        drawFarRight(painter, 80 - 12 + (xoffset * 24) - 10);
+    if (aBlock == 255) {
+        if (aDist == EDistanceFar) {
+            if (aXOffset < 0) {
+                drawFarCenter(painter, 80 - 12 + (aXOffset * 24));
+                drawFarLeft(painter, 80 - 12 + (aXOffset * 24) + 24);
+            } else if (aXOffset == 0) {
+                drawFarCenter(painter, 80 - 12);
+            } else if (aXOffset > 0) {
+                drawFarCenter(painter, 80 - 12 + (aXOffset * 24));
+                drawFarRight(painter, 80 - 12 + (aXOffset * 24) - 10);
+            }
+        } else if (aDist == EDistanceMid) {
+            if (aXOffset < 0) {
+                drawMidCenter(painter, 80 - 33 - (66 - 24)
+                              + (aXOffset * 24));
+                drawMidLeft(painter, 80 - 33 - (66 - 24)
+                            + (aXOffset * 24) + 66);
+            } else if (aXOffset == 0) {
+                drawMidCenter(painter, 80 - 33);
+            } else if (aXOffset > 0) {
+                drawMidCenter(painter, 80 - 33 + (66 - 24)
+                              + (aXOffset * 24));
+                drawMidRight(painter, 80 - 33 + (66 - 24)
+                             + (aXOffset * 24) - 21);
+            }
+        } else if (aDist == EDistanceClose) {
+            if (aXOffset < 0) {
+                drawCloseLeft(painter);
+            } else if (aXOffset == 0) {
+                drawCloseCenter(painter);
+            } else if (aXOffset > 0) {
+                drawCloseRight(painter);
+            }
         }
-    } else if (dist == DistMid) {
-        if (xoffset < 0) {
-        drawMidCenter(painter, 80 - 33 - (66 - 24) + (xoffset * 24)); // 49 -> 49.5
-        drawMidLeft(painter, 80 - 33 - (66 - 24) + (xoffset * 24) + 66);
-        } else if (xoffset == 0) {
-        drawMidCenter(painter, 80 - 33);
-        } else if (xoffset > 0) {
-        drawMidCenter(painter, 80 - 33 + (66 - 24) + (xoffset * 24));
-        drawMidRight(painter, 80 - 33 + (66 - 24) + (xoffset * 24) - 21); // 30 -> 30.5
-        }
-    } else if (dist == DistClose) {
-        if (xoffset < 0) {
-        drawCloseLeft(painter);
-        } else if (xoffset == 0) {
-        drawCloseCenter(painter);
-        } else if (xoffset > 0) {
-        drawCloseRight(painter);
-        }
-    }
     }
 }
 
-void CPlayField::drawFarCenter(QPainter &painter, int xx)
+void CPlayField::drawFarCenter(QPainter &painter, int aX)
 {
-    painter.drawPixmap(xx, 80 - 12 + 1,
-    (m_dir == North || m_dir == West) ? m_far_center_bright : m_far_center);
+    painter.drawPixmap(aX, 80 - 12 + 1,
+                       (e_Direction == ENorth || e_Direction == EWest)
+                       ? m_FarDistanceCenterBright : m_FarDistanceCenter);
 }
 
-void CPlayField::drawFarLeft(QPainter &painter, int xx)
+void CPlayField::drawFarLeft(QPainter &painter, int aX)
 {
-    QPixmap pix;
-    int y;
+    QPixmap m_Pixmap;
 
-    pix = (m_dir == North || m_dir == East) ? m_far_left_bright : m_far_left;
-    for (y = 0; y < 11; y++) { // 16.5 -> 16
+    m_Pixmap = (e_Direction == ENorth || e_Direction == EEast)
+            ? m_FarDistanceLeftBright : m_FarDistanceLeft;
+    for (int y = 0; y < 11; y++) {
         if (!y) {
             continue;
         }
-    painter.drawPixmap(xx, 80 - 12 + y, pix, 0, y, y, 1);
-    painter.drawPixmap(xx, 80 - 12 + 24 - y, pix, 0, 23 - y, y, 1); // 34.5 -> 34
+        painter.drawPixmap(aX, 80 - 12 + y, m_Pixmap, 0, y, y, 1);
+        painter.drawPixmap(aX, 80 - 12 + 24 - y, m_Pixmap, 0, 23 - y, y, 1);
     }
-    painter.drawPixmap(xx, 80 - 12 + 11, pix, 0, 11, 12, 3); // 16.5 -> 16
+    painter.drawPixmap(aX, 80 - 12 + 11, m_Pixmap, 0, 11, 12, 3);
 }
 
-void CPlayField::drawFarRight(QPainter &painter, int xx)
+void CPlayField::drawFarRight(QPainter &painter, int aX)
 {
-    QPixmap pix;
-    int y;
+    QPixmap m_Pixmap;
 
-    pix = (m_dir == South || m_dir == West) ? m_far_right_bright : m_far_right;
-    for (y = 0; y < 11; y++) { // 16.5 -> 16
-    painter.drawPixmap(xx + 11 - y, 80 - 12 + y, pix, 11 - y, y, y, 1); // 16.5 -> 16
-    painter.drawPixmap(xx + 11 - y, 80 - 12 + 24 - y + 1, pix, 11 - y, 24 - y, y, 1); // 16.5 -> 16
+    m_Pixmap = (e_Direction == ESouth || e_Direction == EWest)
+            ? m_FarDistanceRightBright : m_FarDistanceRight;
+    for (int y = 0; y < 11; y++) {
+        painter.drawPixmap(aX + 11 - y, 80 - 12 + y, m_Pixmap, 11 - y, y, y, 1);
+        painter.drawPixmap(aX + 11 - y, 80 - 12 + 24 - y + 1,
+                           m_Pixmap, 11 - y, 24 - y, y, 1);
     }
-    painter.drawPixmap(xx, 80 - 12 + 11, pix, 0, 11, 12, 4); // 16.5 -> 16
+    painter.drawPixmap(aX, 80 - 12 + 11, m_Pixmap, 0, 11, 12, 4);
 }
 
-void CPlayField::drawMidCenter(QPainter &painter, int xx)
+void CPlayField::drawMidCenter(QPainter &painter, int aX)
 {
-    painter.drawPixmap(xx, 80 - 33 + 1,
-    (m_dir == North || m_dir == West) ? m_middle_center_bright : m_middle_center); // 49 -> 49.5
+    painter.drawPixmap(aX, 80 - 33 + 1,
+                       (e_Direction == ENorth || e_Direction == EWest)
+                       ? m_MiddleDistanceCenterBright : m_MiddleDistanceCenter);
 }
 
-void CPlayField::drawMidLeft(QPainter &painter, int xx)
+void CPlayField::drawMidLeft(QPainter &painter, int aX)
 {
-    QPixmap pix;
-    int y;
+    QPixmap m_Pixmap;
 
-    pix = (m_dir == North || m_dir == East) ? m_middle_left_bright : m_middle_left;
-    for (y = 0; y < 22; y++) {
+    m_Pixmap = (e_Direction == ENorth || e_Direction == EEast)
+            ? m_MiddleDistanceLeftBright : m_MiddleDistanceLeft;
+    for (int y = 0; y < 22; y++) {
         if (!y) {
             continue;
         }
-    painter.drawPixmap(xx, 80 - 33 + y, pix, 0, y, y, 1); // 49 -> 49.5
-    painter.drawPixmap(xx, 80 - 33 + 66 - y, pix, 0, 66 - y, y, 1); // 49 -> 49.5
+        painter.drawPixmap(aX, 80 - 33 + y, m_Pixmap, 0, y, y, 1);
+        painter.drawPixmap(aX, 80 - 33 + 66 - y, m_Pixmap, 0, 66 - y, y, 1);
     }
-    painter.drawPixmap(xx, 80 - 33 + 22, pix, 0, 23, 24, 23); // 49 -> 49.5, 37 -> 37.5
+    painter.drawPixmap(aX, 80 - 33 + 22, m_Pixmap, 0, 23, 24, 23);
 }
 
-void CPlayField::drawMidRight(QPainter &painter, int xx)
+void CPlayField::drawMidRight(QPainter &painter, int aX)
 {
-    QPixmap pix;
-    int y;
+    QPixmap m_Pixmap;
 
-    pix = (m_dir == South || m_dir == West) ? m_middle_right_bright : m_middle_right;
-    for (y = 0; y < 22; y++) {
-    painter.drawPixmap(xx + 22 - y, 80 - 33 + y, pix, 22 - y, y, y, 1); // 33 -> 33.5
-    painter.drawPixmap(xx + 22 - y, 80 - 33 + 66 - y + 1, pix, 22 - y, 66 - y, y, 1); // 33 -> 33.5
+    m_Pixmap = (e_Direction == ESouth || e_Direction == EWest)
+            ? m_MiddleDistanceRightBright : m_MiddleDistanceRight;
+    for (int y = 0; y < 22; y++) {
+        painter.drawPixmap(aX + 22 - y, 80 - 33 + y, m_Pixmap, 22 - y, y, y, 1);
+        painter.drawPixmap(aX + 22 - y, 80 - 33 + 66 - y + 1,
+                           m_Pixmap, 22 - y, 66 - y, y, 1);
     }
-    painter.drawPixmap(xx, 80 - 33 + 22, pix, 0, 22, 24, 24); // 33 -> 33.5, 37 -> 37.5
+    painter.drawPixmap(aX, 80 - 33 + 22, m_Pixmap, 0, 22, 24, 24);
 }
 
 void CPlayField::drawCloseCenter(QPainter &painter)
 {
     painter.drawPixmap(0, 0,
-    (m_dir == North || m_dir == West) ? m_close_center_bright : m_close_center);
+                       (e_Direction == ENorth || e_Direction == EWest)
+                       ? m_CloseDistanceCenterBright : m_CloseDistanceCenter);
 }
 
 void CPlayField::drawCloseLeft(QPainter &painter)
 {
-    QPixmap pix;
-    int y;
+    QPixmap m_Pixmap;
 
-    pix = (m_dir == North || m_dir == East) ? m_close_left_bright : m_close_left;
-    for (y = 0; y < 51; y++) { // 76 -> 76.5
+    m_Pixmap = (e_Direction == ENorth || e_Direction == EEast)
+            ? m_CloseDistanceLeftBright : m_CloseDistanceLeft;
+    for (int y = 0; y < 51; y++) {
         if (!y) {
             continue;
         }
-    painter.drawPixmap(0, y, pix, 0, y, y, 1);
-    painter.drawPixmap(0, 160 - y, pix, 0, 160 - y, y, 1);
+        painter.drawPixmap(0, y, m_Pixmap, 0, y, y, 1);
+        painter.drawPixmap(0, 160 - y, m_Pixmap, 0, 160 - y, y, 1);
     }
-    painter.drawPixmap(0, 51, pix, 0, 51, 50, 60); // 76 -> 76.5
+    painter.drawPixmap(0, 51, m_Pixmap, 0, 51, 50, 60);
 }
 
 void CPlayField::drawCloseRight(QPainter &painter)
 {
-    QPixmap pix;
-    int y;
+    QPixmap m_Pixmap;
 
-    pix = (m_dir == South || m_dir == West) ? m_close_right_bright : m_close_right;
-    for (y = 0; y < 51; y++) { // 76 -> 76.5
-    painter.drawPixmap(160 - y + 1, y, pix, 51 - y - 1, y, y, 1); // 76 -> 76.5
-    painter.drawPixmap(160 - y, 160 - y, pix, 51 - y - 1, 160 - y, y, 1); // 76 -> 76.5
+    m_Pixmap = (e_Direction == ESouth || e_Direction == EWest)
+            ? m_CloseDistanceRightBright : m_CloseDistanceRight;
+    for (int y = 0; y < 51; y++) {
+        painter.drawPixmap(160 - y + 1, y, m_Pixmap, 51 - y - 1, y, y, 1);
+        painter.drawPixmap(160 - y, 160 - y,
+                           m_Pixmap, 51 - y - 1, 160 - y, y, 1);
     }
-    painter.drawPixmap(110, 51, pix, 0, 51, 50, 60); // 76 -> 76.5
+    painter.drawPixmap(110, 51, m_Pixmap, 0, 51, 50, 60);
 }
 
 CPlayField::~CPlayField()
 {
-    delete m_pixmap;
-    delete m_timer;
+    delete m_MainPixmap;
+    delete m_GameTimer;
 }

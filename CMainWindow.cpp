@@ -1,3 +1,71 @@
+/*
+ * CMainWindow - modern Qt GUI class for PDA Maze game.
+ *
+ * Struction of menu:
+ *     |
+ *     +-Game
+ *     |    |
+ *     |    +-New Game <F5>
+ *     |    |
+ *     |    +-Quit <F10>
+ *     |
+ *     +-Settings
+ *     |    |
+ *     |    +-Timer
+ *     |    |   |
+ *     |    |   +-Timer Up
+ *     |    |   |
+ *     |    |   +-Timer Down
+ *     |    |
+ *     |    +-Map
+ *     |    |   |
+ *     |    |   +-All
+ *     |    |   |
+ *     |    |   +-Build
+ *     |    |   |
+ *     |    |   +-None
+ *     |    |
+ *     |    +-Size of map
+ *     |    |   |
+ *     |    |   +-9x9
+ *     |    |   |
+ *     |    |   +-19x19
+ *     |    |   |
+ *     |    |   +-29x29
+ *     |    |   |
+ *     |    |   +-39x39
+ *     |    |   |
+ *     |    |   +-49x49
+ *     |    |
+ *     |    +-Step Counter
+ *     |    |
+ *     |    +-Screen Size
+ *     |    |   |
+ *     |    |   +-160x177
+ *     |    |   |
+ *     |    |   +-240x265
+ *     |    |   |
+ *     |    |   +-480x531
+ *     |    |
+ *     |    +-Language
+ *     |        |
+ *     |        +-English
+ *     |        |
+ *     |        +-Spanish
+ *     |        |
+ *     |        +-Russian
+ *     |
+ *     +-Help
+ *          |
+ *          +-Control Keys <F1>
+ *          |
+ *          +-About PDA Maze
+ *          |
+ *          +-About Qt...
+ *
+ * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
+*/
+
 #include "CMainWindow.h"
 
 #include <QApplication>
@@ -10,7 +78,7 @@ CMainWindow::CMainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     /* Install translations for App */
-    qApp->installTranslator(&appTranslator);
+    qApp->installTranslator(&m_AppTranslator);
 
     m_IniConfig = new CIniConfig;
     m_PlayField = new CPlayField;
@@ -19,13 +87,13 @@ CMainWindow::CMainWindow(QWidget *parent)
         qCritical() << "Error reading config!";
     }
 
-    m_PlayField->updateTimerMode(m_IniConfig->getIniTimerMode());
-    m_PlayField->updateMapMode(m_IniConfig->getIniMapMode());
-    m_PlayField->updateSize(m_IniConfig->getIniMapSize());
-    m_PlayField->updateStepStatus(m_IniConfig->getIniStepShow());
-    m_PlayField->updateScreenScale(m_IniConfig->getIniScaleScreen());
-    m_PlayField->updateSmoothStatus(m_IniConfig->getIniSmoothScreen());
-    m_PlayField->updateLang(m_IniConfig->getIniAppLang());
+    m_PlayField->setTimerMode(m_IniConfig->getIniTimerMode());
+    m_PlayField->setMapMode(m_IniConfig->getIniMapMode());
+    m_PlayField->setMapSize(m_IniConfig->getIniMapSize());
+    m_PlayField->setStepStatus(m_IniConfig->getIniStepShow());
+    m_PlayField->setScaleScreen(m_IniConfig->getIniScaleScreen());
+    m_PlayField->setSmoothScreen(m_IniConfig->getIniSmoothScreen());
+    m_PlayField->setAppLang(m_IniConfig->getIniAppLang());
 
     createActions();
     m_actionShowStep->setChecked(m_IniConfig->getIniStepShow());
@@ -46,11 +114,12 @@ CMainWindow::CMainWindow(QWidget *parent)
     setWindowIcon(QIcon("://icons/PDA_maze_64x64.png"));
 }
 
-void CMainWindow::createActions()
+void CMainWindow::createActions(void)
 {
     m_actionNewGame = new QAction(this);
     m_actionNewGame->setShortcut(Qt::Key_F5);
-    connect(m_actionNewGame, SIGNAL(triggered()), m_PlayField, SLOT(start()));
+    connect(m_actionNewGame, SIGNAL(triggered()),
+            m_PlayField, SLOT(startGame()));
 
     m_actionQuit = new QAction(this);
     m_actionQuit->setShortcut(Qt::Key_F10);
@@ -68,16 +137,16 @@ void CMainWindow::createActions()
 
     m_actionHelp = new QAction(this);
     m_actionHelp->setShortcut(Qt::Key_F1);
-    connect(m_actionHelp, SIGNAL(triggered()), m_PlayField, SLOT(help()));
+    connect(m_actionHelp, SIGNAL(triggered()), m_PlayField, SLOT(showHelp()));
 
     m_actionAbout = new QAction(this);
-    connect(m_actionAbout, SIGNAL(triggered()), m_PlayField, SLOT(stop()));
+    connect(m_actionAbout, SIGNAL(triggered()), m_PlayField, SLOT(stopGame()));
 
     m_actionAboutQt = new QAction(this);
     connect(m_actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
-void CMainWindow::createMenus()
+void CMainWindow::createMenus(void)
 {
     m_menuFile = new QMenu;
     m_menuFile->addAction(m_actionNewGame);
@@ -106,7 +175,7 @@ void CMainWindow::createMenus()
     menuBar()->addMenu(m_menuHelp);
 }
 
-QMenu *CMainWindow::createTimerMenu()
+QMenu *CMainWindow::createTimerMenu(void)
 {
     m_menupTimer = new QMenu;
 
@@ -130,7 +199,7 @@ QMenu *CMainWindow::createTimerMenu()
     return m_menupTimer;
 }
 
-QMenu *CMainWindow::createMapModeMenu()
+QMenu *CMainWindow::createMapModeMenu(void)
 {
     m_menupMapMode = new QMenu;
 
@@ -154,7 +223,7 @@ QMenu *CMainWindow::createMapModeMenu()
     return m_menupMapMode;
 }
 
-QMenu *CMainWindow::createMapSizeMenu()
+QMenu *CMainWindow::createMapSizeMenu(void)
 {
     m_menupMapSize = new QMenu;
 
@@ -179,7 +248,7 @@ QMenu *CMainWindow::createMapSizeMenu()
     return m_menupMapSize;
 }
 
-QMenu *CMainWindow::createScaleScreenMenu()
+QMenu *CMainWindow::createScaleScreenMenu(void)
 {
     m_menupScaleScreen = new QMenu;
 
@@ -206,7 +275,7 @@ QMenu *CMainWindow::createScaleScreenMenu()
     return m_menupScaleScreen;
 }
 
-QMenu *CMainWindow::createLanguageMenu()
+QMenu *CMainWindow::createLanguageMenu(void)
 {
     m_menupAppLang = new QMenu;
 
@@ -254,7 +323,7 @@ QMenu *CMainWindow::createLanguageMenu()
     return m_menupAppLang;
 }
 
-void CMainWindow::disableSmoothScreen()
+void CMainWindow::disableSmoothScreen(void)
 {
     m_actionSmoothScreen->setChecked(false);
     m_actionSmoothScreen->setDisabled(true);
@@ -262,15 +331,15 @@ void CMainWindow::disableSmoothScreen()
     qWarning() << "Smooth screen function are disabled.";
 }
 
-void CMainWindow::loadTranslations()
+void CMainWindow::loadTranslations(void)
 {
     QDir qmDir("://i18n");
     QString qmPath = qmDir.absolutePath();
 
-    appTranslator.load("PDA_Maze_" + m_IniConfig->getIniAppLang(), qmPath);
+    m_AppTranslator.load("PDA_Maze_" + m_IniConfig->getIniAppLang(), qmPath);
 }
 
-void CMainWindow::retranslateUi()
+void CMainWindow::retranslateUi(void)
 {
     m_actionGroupTimer->actions().at(CIniConfig::ETimerUp)
             ->setText(tr("Timer Up"));
@@ -355,21 +424,21 @@ void CMainWindow::detFixedSize(int aScreenScale)
 void CMainWindow::slotTimerModeChange(QAction *action)
 {
     m_IniConfig->setIniTimerMode(action->data().toInt());
-    m_PlayField->updateTimerMode(action->data().toInt());
+    m_PlayField->setTimerMode(action->data().toInt());
     qDebug() << "Changed TimerMode:" << action->data().toInt();
 }
 
 void CMainWindow::slotMapModeChange(QAction *action)
 {
     m_IniConfig->setIniMapMode(action->data().toInt());
-    m_PlayField->updateMapMode(action->data().toInt());
+    m_PlayField->setMapMode(action->data().toInt());
     qDebug() << "Changed MapMode:" << action->data().toInt();
 }
 
 void CMainWindow::slotMapSizeChange(QAction *action)
 {
     m_IniConfig->setIniMapSize(action->data().toInt());
-    m_PlayField->updateSize(action->data().toInt());
+    m_PlayField->setMapSize(action->data().toInt());
     qDebug() << "Changed MapSize:" << action->data().toInt();
 }
 
@@ -386,7 +455,7 @@ void CMainWindow::slotScaleScreenChange(QAction *action)
         break;
     }
 
-    m_PlayField->updateScreenScale(m_IniConfig->getIniScaleScreen());
+    m_PlayField->setScaleScreen(m_IniConfig->getIniScaleScreen());
     detFixedSize(m_IniConfig->getIniScaleScreen());
 
     retranslateUi(); // Change Window Title
@@ -397,14 +466,14 @@ void CMainWindow::slotScaleScreenChange(QAction *action)
 void CMainWindow::slotShowStepChange(bool aShowStep)
 {
     m_IniConfig->setIniStepShow(aShowStep);
-    m_PlayField->updateStepStatus(aShowStep);
+    m_PlayField->setStepStatus(aShowStep);
     qDebug() << "Changed ShowStep:" << aShowStep;
 }
 
 void CMainWindow::slotSmoothScreenChange(bool aSmoothScreen)
 {
     m_IniConfig->setIniSmoothScreen(aSmoothScreen);
-    m_PlayField->updateSmoothStatus(aSmoothScreen);
+    m_PlayField->setSmoothScreen(aSmoothScreen);
     qDebug() << "Changed ScreenSmooth:" << aSmoothScreen;
 }
 
@@ -417,9 +486,9 @@ void CMainWindow::slotSwitchLanguage(QAction *action)
     QDir qmDir("://i18n");
     QString qmPath = qmDir.absolutePath();
 
-    appTranslator.load("PDA_Maze_" + locale, qmPath);
+    m_AppTranslator.load("PDA_Maze_" + locale, qmPath);
 
-    m_PlayField->updateLang(locale);
+    m_PlayField->setAppLang(locale);
 
     retranslateUi();
 }

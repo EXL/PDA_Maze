@@ -4,137 +4,137 @@
 <context>
     <name>CMainWindow</name>
     <message>
-        <location filename="../CMainWindow.cpp" line="276"/>
+        <location filename="../CMainWindow.cpp" line="345"/>
         <source>Timer Up</source>
         <translation>Отсчёт</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="278"/>
+        <location filename="../CMainWindow.cpp" line="347"/>
         <source>Timer Down</source>
         <translation>Обратный отсчёт</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="281"/>
+        <location filename="../CMainWindow.cpp" line="350"/>
         <source>All</source>
         <translation>Вся карта</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="283"/>
+        <location filename="../CMainWindow.cpp" line="352"/>
         <source>Build</source>
         <translation>Кусочек карты</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="285"/>
+        <location filename="../CMainWindow.cpp" line="354"/>
         <source>None</source>
         <translation>Без карты</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="289"/>
+        <location filename="../CMainWindow.cpp" line="358"/>
         <source>%1x%1</source>
         <translation>%1×%1</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="293"/>
+        <location filename="../CMainWindow.cpp" line="362"/>
         <source>160x177</source>
         <translation>160×177</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="295"/>
+        <location filename="../CMainWindow.cpp" line="364"/>
         <source>240x265</source>
         <translation>240×265</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="297"/>
+        <location filename="../CMainWindow.cpp" line="366"/>
         <source>480x531</source>
         <translation>480×531</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="299"/>
+        <location filename="../CMainWindow.cpp" line="368"/>
         <source>&amp;New Game</source>
         <translation>&amp;Новая игра</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="300"/>
+        <location filename="../CMainWindow.cpp" line="369"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="301"/>
+        <location filename="../CMainWindow.cpp" line="370"/>
         <source>&amp;Step Counter</source>
         <translation>&amp;Шагомер</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="302"/>
+        <location filename="../CMainWindow.cpp" line="371"/>
         <source>Smooth</source>
         <translation>Сглаживание</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="303"/>
+        <location filename="../CMainWindow.cpp" line="372"/>
         <source>&amp;Control Keys</source>
         <translation>&amp;Клавиши управления</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="304"/>
+        <location filename="../CMainWindow.cpp" line="373"/>
         <source>&amp;About</source>
         <translation>О &amp;программе PDA Maze</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="305"/>
+        <location filename="../CMainWindow.cpp" line="374"/>
         <source>About &amp;Qt...</source>
         <translation>О &amp;библиотеке Qt...</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="306"/>
+        <location filename="../CMainWindow.cpp" line="375"/>
         <source>&amp;Timer</source>
         <translation>&amp;Таймер</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="307"/>
+        <location filename="../CMainWindow.cpp" line="376"/>
         <source>&amp;Map</source>
         <translation>&amp;Карта</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="308"/>
+        <location filename="../CMainWindow.cpp" line="377"/>
         <source>Si&amp;ze</source>
         <translation>&amp;Размер карты</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="309"/>
+        <location filename="../CMainWindow.cpp" line="378"/>
         <source>S&amp;creen Size</source>
         <translation>Размер &amp;окна</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="310"/>
+        <location filename="../CMainWindow.cpp" line="379"/>
         <source>&amp;Game</source>
         <translation>&amp;Игра</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="312"/>
+        <location filename="../CMainWindow.cpp" line="381"/>
         <source>&amp;Language</source>
         <translation>&amp;Язык</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="313"/>
+        <location filename="../CMainWindow.cpp" line="382"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="318"/>
+        <location filename="../CMainWindow.cpp" line="387"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="319"/>
+        <location filename="../CMainWindow.cpp" line="388"/>
         <source>PDA Maze</source>
         <translation>PDA Maze</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="323"/>
+        <location filename="../CMainWindow.cpp" line="392"/>
         <source>&amp;Settings-short.</source>
         <translation>&amp;Настр.</translation>
     </message>
     <message>
-        <location filename="../CMainWindow.cpp" line="324"/>
+        <location filename="../CMainWindow.cpp" line="393"/>
         <source>Maze</source>
         <translation>Maze</translation>
     </message>
@@ -142,12 +142,12 @@
 <context>
     <name>CPlayField</name>
     <message>
-        <location filename="../CPlayField.cpp" line="91"/>
+        <location filename="../CPlayField.cpp" line="94"/>
         <source>Step: %1</source>
         <translation>Шаг: %1</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="92"/>
+        <location filename="../CPlayField.cpp" line="95"/>
         <source>Original game by Bill Kendrick
 Zaurus port by Robert Ernst
 Qt port by EXL
@@ -158,21 +158,21 @@ Qt port by EXL
 © 2001-2014</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="96"/>
+        <location filename="../CPlayField.cpp" line="99"/>
         <source>PDA
 Maze</source>
         <translation>PDA
 Maze</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="97"/>
+        <location filename="../CPlayField.cpp" line="100"/>
         <source>Control
 Keys</source>
         <translation>Клавиши
 Управл.</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="98"/>
+        <location filename="../CPlayField.cpp" line="101"/>
         <source>Move: D-pad or W, A, S, D
 Show Map: Space or Enter
 New Game: F5

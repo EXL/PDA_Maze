@@ -1,7 +1,7 @@
 /*
- * CIniConfig - read/write *.ini configs class for PDA Maze game
+ * CIniConfig - read/write *.ini configs class for PDA Maze game.
  *
- * config variables:
+ * Config variables:
  * +-------------------------------------------------------------------------+
  * | Variable name      | Description           | Values                     |
  * +-------------------------------------------------------------------------+
@@ -13,6 +13,8 @@
  * | iniSmoothScreen    | Screen Smoothing      | true, false                |
  * | iniAppLang         | App Language          | "en", "ru", "es" and other |
  * +-------------------------------------------------------------------------+
+ *
+ * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
 */
 
 #include "CIniConfig.h"
@@ -30,7 +32,7 @@ CIniConfig::CIniConfig(QObject *parent) :
     m_Settings = new QSettings(QString(INI_CONFIG_NAME), QSettings::IniFormat);
 }
 
-bool CIniConfig::readIniConfig()
+bool CIniConfig::readIniConfig(void)
 {
     QFileInfo m_IniFileInfo(INI_CONFIG_NAME);
 
@@ -69,7 +71,7 @@ bool CIniConfig::readIniConfig()
     }
 }
 
-void CIniConfig::loadDefaultSettings()
+void CIniConfig::loadDefaultSettings(void)
 {
     iniTimerMode = ETimerUp;        // Timer Up
     iniMapMode = EMapBuild;         // Build Map Mode
@@ -82,7 +84,7 @@ void CIniConfig::loadDefaultSettings()
     showAllVariables();
 }
 
-void CIniConfig::showAllVariables()
+void CIniConfig::showAllVariables(void)
 {
     qDebug() << "PDA Maze Vars:"
              << "\n-- iniTimerMode =" << iniTimerMode
@@ -94,7 +96,7 @@ void CIniConfig::showAllVariables()
              << "\n-- iniAppLang =" << iniAppLang;
 }
 
-bool CIniConfig::checkAllVariables()
+bool CIniConfig::checkAllVariables(void)
 {
     if (iniTimerMode < ETimerUp || iniTimerMode > ETimerDown) {
         qWarning() << "Incorrect variable:"
@@ -138,7 +140,7 @@ bool CIniConfig::checkAllVariables()
     return true;
 }
 
-bool CIniConfig::writeIniConfig()
+bool CIniConfig::writeIniConfig(void)
 {
     QFileInfo m_IniFileInfo(INI_CONFIG_NAME);
 
@@ -169,7 +171,7 @@ void CIniConfig::setIniTimerMode(int aTimerMode)
     iniTimerMode = aTimerMode;
 }
 
-int CIniConfig::getIniTimerMode() const
+int CIniConfig::getIniTimerMode(void) const
 {
     return iniTimerMode;
 }
@@ -179,7 +181,7 @@ void CIniConfig::setIniMapMode(int aMapMode)
     iniMapMode = aMapMode;
 }
 
-int CIniConfig::getIniMapMode() const
+int CIniConfig::getIniMapMode(void) const
 {
     return iniMapMode;
 }
@@ -189,7 +191,7 @@ void CIniConfig::setIniMapSize(int aMapSize)
     iniMapSize = aMapSize;
 }
 
-int CIniConfig::getIniMapSize() const
+int CIniConfig::getIniMapSize(void) const
 {
     return iniMapSize;
 }
@@ -199,7 +201,7 @@ void CIniConfig::setIniStepShow(bool aStepShow)
     iniStepShow = aStepShow;
 }
 
-bool CIniConfig::getIniStepShow() const
+bool CIniConfig::getIniStepShow(void) const
 {
     return iniStepShow;
 }
@@ -209,7 +211,7 @@ void CIniConfig::setIniScaleScreen(int aScaleScreen)
     iniScaleScreen = aScaleScreen;
 }
 
-int CIniConfig::getIniScaleScreen() const
+int CIniConfig::getIniScaleScreen(void) const
 {
     return iniScaleScreen;
 }
@@ -219,7 +221,7 @@ void CIniConfig::setIniSmoothScreen(bool aSmoothScreen)
     iniSmoothScreen = aSmoothScreen;
 }
 
-bool CIniConfig::getIniSmoothScreen() const
+bool CIniConfig::getIniSmoothScreen(void) const
 {
     return iniSmoothScreen;
 }
@@ -229,7 +231,7 @@ void CIniConfig::setIniAppLang(const QString &aAppLang)
     iniAppLang = aAppLang;
 }
 
-QString CIniConfig::getIniAppLang() const
+QString CIniConfig::getIniAppLang(void) const
 {
     return iniAppLang;
 }

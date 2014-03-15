@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2002 Robert Ernst <robert.ernst@maxxio.com>
- * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
+ * CPlayField - the PDA Maze widget.
  *
  * This file may be distributed and/or modified under the terms of the
  * GNU General Public License version 2 as published by the Free Software
@@ -12,19 +11,20 @@
  *
  * See COPYING for GPL licensing information.
  *
+ * Copyright (C) 2001 Bill Kendrick <bill@newbreedsoftware.com>
+ * Copyright (C) 2002 Robert Ernst <robert.ernst@maxxio.com>
+ * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
  */
 
 #ifndef CPLAYFIELD_H
 #define CPLAYFIELD_H
 
-#include <QPixmap>
+#include "CIniConfig.h"
+
 #include <QPainter>
+#include <QPixmap>
 #include <QTimer>
 #include <QWidget>
-
-#ifdef _DEBUG
-#include <QDebug>
-#endif
 
 class CPlayField : public QWidget
 {
@@ -32,118 +32,100 @@ class CPlayField : public QWidget
 
 public:
     CPlayField(QWidget *parent = 0);
-    void retranslateUi();
     ~CPlayField();
 
-public:
-    enum TimerModes {
-    TimerUp,
-    TimerDown,
+private:
+    enum TDistance {
+        EDistanceFar,
+        EDistanceMid,
+        EDistanceClose,
     };
-    enum MapModes {
-    MapAll,
-    MapBuild,
-    MapNone,
-    };
-    enum Dist {
-    DistFar,
-    DistMid,
-    DistClose,
-    };
+
+    enum TGameState {
+        EIntro,
+        EPlaying,
+        EViewMap,
+        EGameOverWin,
+        EGameOverLoose,
+        EHelp
+    } e_GameState;
+
+    enum TDirections {
+        ENorth,
+        EEast,
+        ESouth,
+        EWest,
+    } e_Direction;
 
 private:
-    static const int max_size = 49;
+    enum CIniConfig::TTimerModes e_TimerMode;
+    enum CIniConfig::TMapModes e_MapMode;
+    static const int KMaxMapSize = 49;
+    int mapSize;
+
+    int xPos;
+    int yPos;
+    int xPosInc[4];
+    int yPosInc[4];
+
+    int timerCounter;
+    int stepCounter;
+    bool showStep;
+    int scaleScreen;
+    bool smoothScreen;
+
+    QString m_RtStringStep;
+    QString m_RtStringCopyright;
+    QString m_RtStringGameName;
+    QString m_RtStringCtrlKeysTitle;
+    QString m_RtStringCtrlKeysBody;
+    QString m_AppLang;
+
+    int theMaze[KMaxMapSize][KMaxMapSize];
+    int viewedMaze[KMaxMapSize][KMaxMapSize];
 
 private:
-    QString m_rt_str_step;
-    QString m_rt_str_copyright;
-    QString m_rt_str_gamename;
-    QString m_rt_str_kktitle;
-    QString m_rt_str_kkbody;
-    QString m_lang;
+    QPixmap *m_MainPixmap;
+    QTimer *m_GameTimer;
 
-    size_t m_step;
-    bool m_bool_step;
+private: // Images
+    QPixmap m_BackgroundEast;
+    QPixmap m_BackgroundNorth;
+    QPixmap m_BackgroundSouth;
+    QPixmap m_BackgroundWest;
 
-    int m_scr_scale;
-    bool m_scr_smooth;
+    QPixmap m_FarDistanceCenter;
+    QPixmap m_FarDistanceCenterBright;
+    QPixmap m_FarDistanceLeft;
+    QPixmap m_FarDistanceLeftBright;
+    QPixmap m_FarDistanceRight;
+    QPixmap m_FarDistanceRightBright;
 
-    enum TimerModes m_timer_mode;
-    enum MapModes m_map_mode;
-    int m_size;
-    enum {
-    Intro,
-    Playing,
-    ViewMap,
-    GameOverWin,
-    GameOverLoose,
-        Help
-    } m_state;
-    int m_xpos;
-    int m_ypos;
-    enum Dirs {
-    North = 0,
-    East = 1,
-    South = 2,
-    West = 3,
-    } m_dir;
-    int m_maze[max_size][max_size];
-    int m_seen[max_size][max_size];
-    int xpos_inc[4];
-    int ypos_inc[4];
-    int m_counter;
-    QTimer *m_timer;
-    QPixmap *m_pixmap;
-    QPixmap m_bkg_east;
-    QPixmap m_bkg_north;
-    QPixmap m_bkg_south;
-    QPixmap m_bkg_west;
-    QPixmap m_close_center;
-    QPixmap m_close_center_bright;
-    QPixmap m_close_left;
-    QPixmap m_close_left_bright;
-    QPixmap m_close_right;
-    QPixmap m_close_right_bright;
-    QPixmap m_cmp_east;
-    QPixmap m_cmp_north;
-    QPixmap m_cmp_south;
-    QPixmap m_cmp_west;
-    QPixmap m_far_center;
-    QPixmap m_far_center_bright;
-    QPixmap m_far_left;
-    QPixmap m_far_left_bright;
-    QPixmap m_far_right;
-    QPixmap m_far_right_bright;
-    QPixmap m_ground;
-    QPixmap m_middle_center;
-    QPixmap m_middle_center_bright;
-    QPixmap m_middle_left;
-    QPixmap m_middle_left_bright;
-    QPixmap m_middle_right;
-    QPixmap m_middle_right_bright;
-    QPixmap m_numbers;
-    QPixmap m_timeup;
-    QPixmap m_title;
-    QPixmap m_youwin;
+    QPixmap m_MiddleDistanceCenter;
+    QPixmap m_MiddleDistanceCenterBright;
+    QPixmap m_MiddleDistanceLeft;
+    QPixmap m_MiddleDistanceLeftBright;
+    QPixmap m_MiddleDistanceRight;
+    QPixmap m_MiddleDistanceRightBright;
 
-public slots:
-    void updateTimerMode(int timer_mode);
-    void updateMapMode(int map_mode);
-    void updateSize(int size);
-    void updateStepStatus(bool qStep);
-    void updateScreenScale(int scale);
-    void updateSmoothStatus(bool smooth);
-    void updateLang(QString lang);
-    void timerTick(void);
-    void start(void);
-    void stop(void);
-    void help(void);
+    QPixmap m_CloseDistanceCenter;
+    QPixmap m_CloseDistanceCenterBright;
+    QPixmap m_CloseDistanceLeft;
+    QPixmap m_CloseDistanceLeftBright;
+    QPixmap m_CloseDistanceRight;
+    QPixmap m_CloseDistanceRightBright;
 
-protected:
-    void paintEvent(QPaintEvent */*event*/);
-    void showEvent(QShowEvent *event);
-    void keyPressEvent(QKeyEvent *event);
-    void mousePressEvent(QMouseEvent *event);
+    QPixmap m_CompassEast;
+    QPixmap m_ComapassNorth;
+    QPixmap m_CompassSouth;
+    QPixmap m_CompassWest;
+
+    QPixmap m_PicTimeUp;
+    QPixmap m_PicGameTitle;
+    QPixmap m_PicYouWin;
+
+    QPixmap m_Ground;
+    QPixmap m_TimerNumbers;
 
 private:
     void drawIntro(void);
@@ -153,26 +135,52 @@ private:
     void drawGameOverWin(void);
     void drawGameOverLoose(void);
     void drawAllOnWidget(QPainter &painter);
+
     void moveForward(void);
     void moveBackward(void);
     void turnLeft(void);
     void turnRight(void);
+
     void makeMaze(void);
-    int mazeChunk(int xpos, int ypos);
+    int mazeChunk(int aXPos, int aYPos);
+
     void drawMazeView(QPainter &painter);
     void drawCompass(QPainter &painter);
     void drawTime(QPainter &painter);
-    void drawSteps(QPainter &painter);
-    void drawWall(QPainter &painter, int block, enum Dist dist, int xoffset);
-    void drawFarCenter(QPainter &painter, int xx);
-    void drawFarLeft(QPainter &painter, int xx);
-    void drawFarRight(QPainter &painter, int xx);
-    void drawMidCenter(QPainter &painter, int xx);
-    void drawMidLeft(QPainter &painter, int xx);
-    void drawMidRight(QPainter &painter, int xx);
+    void drawStepCounter(QPainter &painter);
+    void drawWall(QPainter &painter, int aBlock,
+                  enum TDistance aDist, int aXOffset);
+    void drawFarCenter(QPainter &painter, int aX);
+    void drawFarLeft(QPainter &painter, int aX);
+    void drawFarRight(QPainter &painter, int aX);
+    void drawMidCenter(QPainter &painter, int aX);
+    void drawMidLeft(QPainter &painter, int aX);
+    void drawMidRight(QPainter &painter, int aX);
     void drawCloseCenter(QPainter &painter);
     void drawCloseLeft(QPainter &painter);
     void drawCloseRight(QPainter &painter);
+
+protected:
+    void paintEvent(QPaintEvent *event);
+    void showEvent(QShowEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+
+public slots:
+    void timerTick(void);
+    void startGame(void);
+    void stopGame(void);
+    void showHelp(void);
+
+public:
+    void setTimerMode(int aTimerMode);
+    void setMapMode(int aMapMode);
+    void setMapSize(int aMapSize);
+    void setStepStatus(bool aShowStep);
+    void setScaleScreen(int aScaleScreen);
+    void setSmoothScreen(bool aSmoothScreen);
+    void setAppLang(QString aAppLang);
+    void retranslateUi(void);
 };
 
 #endif // CPLAYFIELD_H
