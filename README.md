@@ -28,3 +28,11 @@ Linux Mint 15 KDE 64-bit:
 Linux Embedded ARM Arch:
 
 ![Linux Embedded ARM Arch](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Embedded_Linux.png)
+
+Windows XP (Zune theme):
+
+![Windows XP (Zune theme)](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Windows_XP.png)
+
+Windows 7:
+
+![Windows 7](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Windows_7.png)
