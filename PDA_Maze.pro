@@ -11,6 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = PDA_Maze
 TEMPLATE = app
 
+# Define App Version
+DEFINES += APP_VERSION=\"0.1\"
+
 SOURCES += main.cpp \
     CMainWindow.cpp \
     CIniConfig.cpp \

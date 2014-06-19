@@ -142,37 +142,47 @@
 <context>
     <name>CPlayField</name>
     <message>
-        <location filename="../CPlayField.cpp" line="94"/>
+        <location filename="../CPlayField.cpp" line="98"/>
         <source>Step: %1</source>
         <translation>Шаг: %1</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="95"/>
         <source>Original game by Bill Kendrick
 Zaurus port by Robert Ernst
 Qt port by EXL
 (c) 2001-2014</source>
-        <translation>Автор - Bill Kendrick
+        <translation type="obsolete">Автор - Bill Kendrick
 Порт на Zaurus - Robert Ernst
 Порт на Qt - EXL
 © 2001-2014</translation>
     </message>
     <message>
         <location filename="../CPlayField.cpp" line="99"/>
+        <source>Original game by Bill Kendrick
+Zaurus port by Robert Ernst
+Qt port by EXL
+Version: %1, (c) 2001-2014</source>
+        <translation>Автор - Bill Kendrick
+Порт на Zaurus - Robert Ernst
+Порт на Qt - EXL
+Версия: %1, © 2001-2014</translation>
+    </message>
+    <message>
+        <location filename="../CPlayField.cpp" line="103"/>
         <source>PDA
 Maze</source>
         <translation>PDA
 Maze</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="100"/>
+        <location filename="../CPlayField.cpp" line="104"/>
         <source>Control
 Keys</source>
         <translation>Клавиши
 Управл.</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="101"/>
+        <location filename="../CPlayField.cpp" line="105"/>
         <source>Move: D-pad or W, A, S, D
 Show Map: Space or Enter
 New Game: F5
@@ -187,103 +197,103 @@ Exit: Esc and F10</source>
     <name>MainWindow</name>
     <message>
         <source>Timer Up</source>
-        <translation type="vanished">Отсчёт</translation>
+        <translation type="obsolete">Отсчёт</translation>
     </message>
     <message>
         <source>Timer Down</source>
-        <translation type="vanished">Обратный отсчёт</translation>
+        <translation type="obsolete">Обратный отсчёт</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="vanished">Вся карта</translation>
+        <translation type="obsolete">Вся карта</translation>
     </message>
     <message>
         <source>Build</source>
-        <translation type="vanished">Кусочек карты</translation>
+        <translation type="obsolete">Кусочек карты</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="vanished">Без карты</translation>
+        <translation type="obsolete">Без карты</translation>
     </message>
     <message>
         <source>%1x%1</source>
-        <translation type="vanished">%1×%1</translation>
+        <translation type="obsolete">%1×%1</translation>
     </message>
     <message>
         <source>160x177</source>
-        <translation type="vanished">160×177</translation>
+        <translation type="obsolete">160×177</translation>
     </message>
     <message>
         <source>240x265</source>
-        <translation type="vanished">240×265</translation>
+        <translation type="obsolete">240×265</translation>
     </message>
     <message>
         <source>480x531</source>
-        <translation type="vanished">480×531</translation>
+        <translation type="obsolete">480×531</translation>
     </message>
     <message>
         <source>&amp;New Game</source>
-        <translation type="vanished">&amp;Новая игра</translation>
+        <translation type="obsolete">&amp;Новая игра</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation type="vanished">&amp;Выход</translation>
+        <translation type="obsolete">&amp;Выход</translation>
     </message>
     <message>
         <source>&amp;Step Counter</source>
-        <translation type="vanished">&amp;Шагомер</translation>
+        <translation type="obsolete">&amp;Шагомер</translation>
     </message>
     <message>
         <source>Smooth</source>
-        <translation type="vanished">Сглаживание</translation>
+        <translation type="obsolete">Сглаживание</translation>
     </message>
     <message>
         <source>&amp;Control Keys</source>
-        <translation type="vanished">&amp;Клавиши управления</translation>
+        <translation type="obsolete">&amp;Клавиши управления</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="vanished">&amp;Помощь</translation>
+        <translation type="obsolete">&amp;Помощь</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation type="vanished">О &amp;программе PDA Maze</translation>
+        <translation type="obsolete">О &amp;программе PDA Maze</translation>
     </message>
     <message>
         <source>About &amp;Qt...</source>
-        <translation type="vanished">О &amp;библиотеке Qt...</translation>
+        <translation type="obsolete">О &amp;библиотеке Qt...</translation>
     </message>
     <message>
         <source>&amp;Timer</source>
-        <translation type="vanished">&amp;Таймер</translation>
+        <translation type="obsolete">&amp;Таймер</translation>
     </message>
     <message>
         <source>&amp;Map</source>
-        <translation type="vanished">&amp;Карта</translation>
+        <translation type="obsolete">&amp;Карта</translation>
     </message>
     <message>
         <source>Si&amp;ze</source>
-        <translation type="vanished">&amp;Размер карты</translation>
+        <translation type="obsolete">&amp;Размер карты</translation>
     </message>
     <message>
         <source>S&amp;creen Size</source>
-        <translation type="vanished">Размер &amp;окна</translation>
+        <translation type="obsolete">Размер &amp;окна</translation>
     </message>
     <message>
         <source>&amp;Game</source>
-        <translation type="vanished">&amp;Игра</translation>
+        <translation type="obsolete">&amp;Игра</translation>
     </message>
     <message>
         <source>&amp;Language</source>
-        <translation type="vanished">&amp;Язык</translation>
+        <translation type="obsolete">&amp;Язык</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation type="vanished">&amp;Настройки</translation>
+        <translation type="obsolete">&amp;Настройки</translation>
     </message>
     <message>
         <source>PDA Maze</source>
-        <translation type="vanished">PDA Maze</translation>
+        <translation type="obsolete">PDA Maze</translation>
     </message>
     <message>
         <source>&amp;Settings-short.</source>
@@ -291,21 +301,21 @@ Exit: Esc and F10</source>
     </message>
     <message>
         <source>Maze</source>
-        <translation type="vanished">Maze</translation>
+        <translation type="obsolete">Maze</translation>
     </message>
 </context>
 <context>
     <name>PlayField</name>
     <message>
         <source>Step: %1</source>
-        <translation type="vanished">Шаг: %1</translation>
+        <translation type="obsolete">Шаг: %1</translation>
     </message>
     <message>
         <source>Original game by Bill Kendrick
 Zaurus port by Robert Ernst
 Qt port by EXL
 (c) 2001-2014</source>
-        <translation type="vanished">Автор - Bill Kendrick
+        <translation type="obsolete">Автор - Bill Kendrick
 Порт на Zaurus - Robert Ernst
 Порт на Qt - EXL
 © 2001-2014</translation>
@@ -313,13 +323,13 @@ Qt port by EXL
     <message>
         <source>PDA
 Maze</source>
-        <translation type="vanished">PDA
+        <translation type="obsolete">PDA
 Maze</translation>
     </message>
     <message>
         <source>Control
 Keys</source>
-        <translation type="vanished">Клавиши
+        <translation type="obsolete">Клавиши
 Управл.</translation>
     </message>
     <message>
@@ -327,7 +337,7 @@ Keys</source>
 Show Map: Space or Enter
 New Game: F5
 Exit: Esc and F10</source>
-        <translation type="vanished">Движ.: D-pad или Ц, Ф, Ы, В
+        <translation type="obsolete">Движ.: D-pad или Ц, Ф, Ы, В
 Карта: Пробел или Enter
 Новая игра: F5
 Выход: Esc и F10</translation>

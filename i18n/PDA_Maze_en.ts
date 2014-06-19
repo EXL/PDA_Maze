@@ -142,37 +142,47 @@
 <context>
     <name>CPlayField</name>
     <message>
-        <location filename="../CPlayField.cpp" line="94"/>
+        <location filename="../CPlayField.cpp" line="98"/>
         <source>Step: %1</source>
         <translation>Step: %1</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="95"/>
         <source>Original game by Bill Kendrick
 Zaurus port by Robert Ernst
 Qt port by EXL
 (c) 2001-2014</source>
-        <translation>Original game by Bill Kendrick
+        <translation type="obsolete">Original game by Bill Kendrick
 Zaurus port by Robert Ernst
 Qt port by EXL
 © 2001-2014</translation>
     </message>
     <message>
         <location filename="../CPlayField.cpp" line="99"/>
+        <source>Original game by Bill Kendrick
+Zaurus port by Robert Ernst
+Qt port by EXL
+Version: %1, (c) 2001-2014</source>
+        <translation>Original game by Bill Kendrick
+Zaurus port by Robert Ernst
+Qt port by EXL
+Version: %1, © 2001-2014</translation>
+    </message>
+    <message>
+        <location filename="../CPlayField.cpp" line="103"/>
         <source>PDA
 Maze</source>
         <translation>PDA
 Maze</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="100"/>
+        <location filename="../CPlayField.cpp" line="104"/>
         <source>Control
 Keys</source>
         <translation>Control
 Keys</translation>
     </message>
     <message>
-        <location filename="../CPlayField.cpp" line="101"/>
+        <location filename="../CPlayField.cpp" line="105"/>
         <source>Move: D-pad or W, A, S, D
 Show Map: Space or Enter
 New Game: F5
@@ -187,125 +197,125 @@ Exit: Esc and F10</translation>
     <name>MainWindow</name>
     <message>
         <source>Timer Up</source>
-        <translation type="vanished">Timer Up</translation>
+        <translation type="obsolete">Timer Up</translation>
     </message>
     <message>
         <source>Timer Down</source>
-        <translation type="vanished">Timer Down</translation>
+        <translation type="obsolete">Timer Down</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="vanished">All</translation>
+        <translation type="obsolete">All</translation>
     </message>
     <message>
         <source>Build</source>
-        <translation type="vanished">Build</translation>
+        <translation type="obsolete">Build</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="vanished">None</translation>
+        <translation type="obsolete">None</translation>
     </message>
     <message>
         <source>%1x%1</source>
-        <translation type="vanished">%1×%1</translation>
+        <translation type="obsolete">%1×%1</translation>
     </message>
     <message>
         <source>160x177</source>
-        <translation type="vanished">160×177</translation>
+        <translation type="obsolete">160×177</translation>
     </message>
     <message>
         <source>240x265</source>
-        <translation type="vanished">240×265</translation>
+        <translation type="obsolete">240×265</translation>
     </message>
     <message>
         <source>480x531</source>
-        <translation type="vanished">480×531</translation>
+        <translation type="obsolete">480×531</translation>
     </message>
     <message>
         <source>&amp;New Game</source>
-        <translation type="vanished">&amp;New Game</translation>
+        <translation type="obsolete">&amp;New Game</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation type="vanished">&amp;Quit</translation>
+        <translation type="obsolete">&amp;Quit</translation>
     </message>
     <message>
         <source>&amp;Step Counter</source>
-        <translation type="vanished">&amp;Step Counter</translation>
+        <translation type="obsolete">&amp;Step Counter</translation>
     </message>
     <message>
         <source>Smooth</source>
-        <translation type="vanished">Smoothing</translation>
+        <translation type="obsolete">Smoothing</translation>
     </message>
     <message>
         <source>&amp;Control Keys</source>
-        <translation type="vanished">&amp;Control Keys</translation>
+        <translation type="obsolete">&amp;Control Keys</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="vanished">&amp;Help</translation>
+        <translation type="obsolete">&amp;Help</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation type="vanished">About &amp;PDA Maze</translation>
+        <translation type="obsolete">About &amp;PDA Maze</translation>
     </message>
     <message>
         <source>About &amp;Qt...</source>
-        <translation type="vanished">About &amp;Qt...</translation>
+        <translation type="obsolete">About &amp;Qt...</translation>
     </message>
     <message>
         <source>&amp;Timer</source>
-        <translation type="vanished">&amp;Timer</translation>
+        <translation type="obsolete">&amp;Timer</translation>
     </message>
     <message>
         <source>&amp;Map</source>
-        <translation type="vanished">&amp;Map</translation>
+        <translation type="obsolete">&amp;Map</translation>
     </message>
     <message>
         <source>Si&amp;ze</source>
-        <translation type="vanished">Si&amp;ze of map</translation>
+        <translation type="obsolete">Si&amp;ze of map</translation>
     </message>
     <message>
         <source>S&amp;creen Size</source>
-        <translation type="vanished">S&amp;creen Size</translation>
+        <translation type="obsolete">S&amp;creen Size</translation>
     </message>
     <message>
         <source>&amp;Game</source>
-        <translation type="vanished">&amp;Game</translation>
+        <translation type="obsolete">&amp;Game</translation>
     </message>
     <message>
         <source>&amp;Language</source>
-        <translation type="vanished">&amp;Language</translation>
+        <translation type="obsolete">&amp;Language</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation type="vanished">&amp;Settings</translation>
+        <translation type="obsolete">&amp;Settings</translation>
     </message>
     <message>
         <source>PDA Maze</source>
-        <translation type="vanished">PDA Maze</translation>
+        <translation type="obsolete">PDA Maze</translation>
     </message>
     <message>
         <source>&amp;Settings-short.</source>
-        <translation type="vanished">&amp;Settings</translation>
+        <translation type="obsolete">&amp;Settings</translation>
     </message>
     <message>
         <source>Maze</source>
-        <translation type="vanished">Maze</translation>
+        <translation type="obsolete">Maze</translation>
     </message>
 </context>
 <context>
     <name>PlayField</name>
     <message>
         <source>Step: %1</source>
-        <translation type="vanished">Step: %1</translation>
+        <translation type="obsolete">Step: %1</translation>
     </message>
     <message>
         <source>Original game by Bill Kendrick
 Zaurus port by Robert Ernst
 Qt port by EXL
 (c) 2001-2014</source>
-        <translation type="vanished">Original game by Bill Kendrick
+        <translation type="obsolete">Original game by Bill Kendrick
 Zaurus port by Robert Ernst
 Qt port by EXL
 © 2001-2014</translation>
@@ -313,13 +323,13 @@ Qt port by EXL
     <message>
         <source>PDA
 Maze</source>
-        <translation type="vanished">PDA
+        <translation type="obsolete">PDA
 Maze</translation>
     </message>
     <message>
         <source>Control
 Keys</source>
-        <translation type="vanished">Control
+        <translation type="obsolete">Control
 Keys</translation>
     </message>
     <message>
@@ -327,7 +337,7 @@ Keys</translation>
 Show Map: Space or Enter
 New Game: F5
 Exit: Esc and F10</source>
-        <translation type="vanished">Move: D-pad or W, A, S, D
+        <translation type="obsolete">Move: D-pad or W, A, S, D
 Show Map: Space or Enter
 New Game: F5
 Exit: Esc and F10</translation>

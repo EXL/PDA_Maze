@@ -24,6 +24,10 @@
 #include <QFontMetrics>
 #include <QResizeEvent>
 
+#ifndef APP_VERSION
+#define APP_VERSION "0.1"
+#endif
+
 CPlayField::CPlayField(QWidget *parent) :
     QWidget(parent)
 {
@@ -95,7 +99,7 @@ void CPlayField::retranslateUi(void)
     m_RtStringCopyright = tr("Original game by Bill Kendrick\n"
                              "Zaurus port by Robert Ernst\n"
                              "Qt port by EXL\n"
-                             "(c) 2001-2014");
+                             "Version: %1, (c) 2001-2014").arg(APP_VERSION);
     m_RtStringGameName = tr("PDA\nMaze");
     m_RtStringCtrlKeysTitle = tr("Control\nKeys");
     m_RtStringCtrlKeysBody = tr("Move: D-pad or W, A, S, D\n"
