@@ -81,7 +81,7 @@
     <message>
         <location filename="../CMainWindow.cpp" line="374"/>
         <source>About &amp;Qt...</source>
-        <translation>Acerca de &amp;Qt</translation>
+        <translation>Acerca de &amp;Qt...</translation>
     </message>
     <message>
         <location filename="../CMainWindow.cpp" line="375"/>

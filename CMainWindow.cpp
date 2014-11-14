@@ -64,7 +64,7 @@
  *          +-About Qt...
  *
  * Copyright (C) 2014 EXL <exlmotodev@gmail.com>
-*/
+ */
 
 #include "CMainWindow.h"
 

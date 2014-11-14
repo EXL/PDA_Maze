@@ -27,11 +27,8 @@
         <file>images/title.png</file>
         <file>icons/PDA_maze_64x64.png</file>
         <file>i18n/PDA_Maze_en.qm</file>
-        <file>i18n/PDA_Maze_en.ts</file>
         <file>i18n/PDA_Maze_es.qm</file>
-        <file>i18n/PDA_Maze_es.ts</file>
         <file>i18n/PDA_Maze_ru.qm</file>
-        <file>i18n/PDA_Maze_ru.ts</file>
         <file>icons/en.png</file>
         <file>icons/es.png</file>
         <file>icons/ru.png</file>
