@@ -238,5 +238,5 @@ QString CIniConfig::getIniAppLang(void) const
 
 CIniConfig::~CIniConfig()
 {
-    /* Empty Destructor */
+    delete m_Settings;
 }

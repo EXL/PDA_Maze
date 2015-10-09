@@ -80,8 +80,8 @@ CMainWindow::CMainWindow(QWidget *parent)
     /* Install translations for App */
     qApp->installTranslator(&m_AppTranslator);
 
-    m_IniConfig = new CIniConfig;
-    m_PlayField = new CPlayField;
+    m_IniConfig = new CIniConfig(this);
+    m_PlayField = new CPlayField(this);
 
     if (!(m_IniConfig->readIniConfig())) {
         qCritical() << "Error reading config!";
@@ -148,12 +148,12 @@ void CMainWindow::createActions(void)
 
 void CMainWindow::createMenus(void)
 {
-    m_menuFile = new QMenu;
+    m_menuFile = new QMenu(this);
     m_menuFile->addAction(m_actionNewGame);
     m_menuFile->addSeparator();
     m_menuFile->addAction(m_actionQuit);
 
-    m_menuSettings = new QMenu;
+    m_menuSettings = new QMenu(this);
     m_menuSettings->addMenu(createTimerMenu());
     m_menuSettings->addMenu(createMapModeMenu());
     m_menuSettings->addMenu(createMapSizeMenu());
@@ -164,7 +164,7 @@ void CMainWindow::createMenus(void)
     m_menuSettings->addSeparator();
     m_menuSettings->addMenu(createLanguageMenu());
 
-    m_menuHelp = new QMenu;
+    m_menuHelp = new QMenu(this);
     m_menuHelp->addAction(m_actionHelp);
     m_menuHelp->addSeparator();
     m_menuHelp->addAction(m_actionAbout);
@@ -177,7 +177,7 @@ void CMainWindow::createMenus(void)
 
 QMenu *CMainWindow::createTimerMenu(void)
 {
-    m_menupTimer = new QMenu;
+    m_menupTimer = new QMenu(this);
 
     m_actionGroupTimer = new QActionGroup(this);
     connect(m_actionGroupTimer, SIGNAL(triggered(QAction *)),
@@ -201,7 +201,7 @@ QMenu *CMainWindow::createTimerMenu(void)
 
 QMenu *CMainWindow::createMapModeMenu(void)
 {
-    m_menupMapMode = new QMenu;
+    m_menupMapMode = new QMenu(this);
 
     m_actionGroupMapMode = new QActionGroup(this);
     connect(m_actionGroupMapMode, SIGNAL(triggered(QAction *)),
@@ -225,7 +225,7 @@ QMenu *CMainWindow::createMapModeMenu(void)
 
 QMenu *CMainWindow::createMapSizeMenu(void)
 {
-    m_menupMapSize = new QMenu;
+    m_menupMapSize = new QMenu(this);
 
     m_actionGroupMapSize = new QActionGroup(this);
     connect(m_actionGroupMapSize, SIGNAL(triggered(QAction *)),
@@ -250,7 +250,7 @@ QMenu *CMainWindow::createMapSizeMenu(void)
 
 QMenu *CMainWindow::createScaleScreenMenu(void)
 {
-    m_menupScaleScreen = new QMenu;
+    m_menupScaleScreen = new QMenu(this);
 
     m_actionGroupScaleScreen = new QActionGroup(this);
     connect(m_actionGroupScaleScreen, SIGNAL(triggered(QAction*)),
@@ -277,7 +277,7 @@ QMenu *CMainWindow::createScaleScreenMenu(void)
 
 QMenu *CMainWindow::createLanguageMenu(void)
 {
-    m_menupAppLang = new QMenu;
+    m_menupAppLang = new QMenu(this);
 
     m_actionGroupAppLang = new QActionGroup(this);
     connect(m_actionGroupAppLang, SIGNAL(triggered(QAction *)),
