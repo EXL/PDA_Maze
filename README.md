@@ -19,20 +19,20 @@ Fixed many graphical glitches.
 
 Windows 8.1:
 
-![Windows 8.1](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Windows_8_1.png)
+![Windows 8.1](screens/PDA_Maze_Windows_8_1.png)
 
 Linux Mint 15 KDE 64-bit:
 
-![Linux Mint 15 KDE 64-bit](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_KDE_Mint.png)
+![Linux Mint 15 KDE 64-bit](screens/PDA_Maze_KDE_Mint.png)
 
 Linux Embedded ARM Arch:
 
-![Linux Embedded ARM Arch](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Embedded_Linux.png)
+![Linux Embedded ARM Arch](screens/PDA_Maze_Embedded_Linux.png)
 
 Windows XP (Zune theme):
 
-![Windows XP (Zune theme)](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Windows_XP.png)
+![Windows XP (Zune theme)](screens/PDA_Maze_Windows_XP.png)
 
 Windows 7:
 
-![Windows 7](https://raw.github.com/EXL/PDA_Maze/master/screens/PDA_Maze_Windows_7.png)
+![Windows 7](screens/PDA_Maze_Windows_7.png)
